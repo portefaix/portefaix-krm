@@ -19,6 +19,7 @@ metadata:
   name: portefaix-krm-gcp
 spec:
   forProvider:
+    description: "Portefaix KRM Crossplane"
     allowed:
       - IPProtocol: tcp
         ports: ["80", "443"]

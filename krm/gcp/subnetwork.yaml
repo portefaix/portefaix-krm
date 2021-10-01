@@ -19,6 +19,7 @@ metadata:
   name: portefaix-krm-gcp
 spec:
   forProvider:
+    description: "Portefaix KRM Crossplane"
     region: eu-west1
     ipCidrRange: "192.168.0.0/24"
     privateIpGoogleAccess: true

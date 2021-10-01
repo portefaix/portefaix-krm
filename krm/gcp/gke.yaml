@@ -19,7 +19,9 @@ metadata:
   name: portefaix-krm-gcp
 spec:
   forProvider:
-    initialClusterVersion: "1.21"
+    # initialClusterVersion: "1.21"
+    releaseChannel:
+      channel: REGULAR
     location: eu-west1
     masterAuth:
       # setting this master auth user name enables basic auth so that a client (e.g.,
@@ -87,6 +89,9 @@ spec:
       imageType: cos_containerd
       labels:
         made-by: crossplane
+      tags:
+        - kubernetes
+        - nodes
       oauthScopes:
       - "https://www.googleapis.com/auth/devstorage.read_only"
       - "https://www.googleapis.com/auth/logging.write"
@@ -97,6 +102,9 @@ spec:
     initialNodeCount: 1
     locations:
       - "eu-west1-b"
+    management:
+      autoRepair: true
+      autoUpgrade: true
   providerConfigRef:
     name: portefaix-gcp
 ---
@@ -122,6 +130,9 @@ spec:
       imageType: cos_containerd
       labels:
         made-by: crossplane
+      tags:
+        - kubernetes
+        - nodes
       oauthScopes:
       - "https://www.googleapis.com/auth/devstorage.read_only"
       - "https://www.googleapis.com/auth/logging.write"
@@ -132,5 +143,50 @@ spec:
     initialNodeCount: 0
     locations:
       - "eu-west1-b"
+    management:
+      autoRepair: true
+      autoUpgrade: true
+  providerConfigRef:
+    name: portefaix-gcp
+---
+apiVersion: container.gcp.crossplane.io/v1beta1
+kind: NodePool
+metadata:
+  name: portefaix-krm-gcp-misc
+spec:
+  forProvider:
+    autoscaling:
+      autoprovisioned: false
+      enabled: true
+      maxNodeCount: 3
+      minNodeCount: 0
+    clusterRef:
+      name: portefaix-krm-gcp
+    config:
+      machineType: n1-standard-1
+      sandboxConfig:
+        type: gvisor
+      diskSizeGb: 120
+      diskType: pd-ssd
+      imageType: cos_containerd
+      labels:
+        made-by: crossplane
+      tags:
+        - kubernetes
+        - nodes
+      preemptible: true
+      oauthScopes:
+      - "https://www.googleapis.com/auth/devstorage.read_only"
+      - "https://www.googleapis.com/auth/logging.write"
+      - "https://www.googleapis.com/auth/monitoring"
+      - "https://www.googleapis.com/auth/servicecontrol"
+      - "https://www.googleapis.com/auth/service.management.readonly"
+      - "https://www.googleapis.com/auth/trace.append"
+    initialNodeCount: 0
+    locations:
+      - "eu-west1-b"
+    management:
+      autoRepair: true
+      autoUpgrade: true
   providerConfigRef:
     name: portefaix-gcp

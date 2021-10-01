@@ -24,6 +24,8 @@ spec:
   storageClass: MULTI_REGIONAL
   providerConfigRef:
     name: portefaix-gcp
+  labels:
+    made-by: crossplane
   deletionPolicy: Delete
 ---
 apiVersion: storage.gcp.crossplane.io/v1alpha1

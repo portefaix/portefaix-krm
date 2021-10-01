@@ -19,9 +19,12 @@ metadata:
   name: portefaix-krm-gcp
 spec:
   forProvider:
+    displayName: portefaix-krm-crossplane
     tier: STANDARD_HA
     region: eu-west1
     memorySizeGb: 1
+    labels:
+      made-by: crossplane
   providerRef:
     name: portefaix-gcp
   writeConnectionSecretToRef:
