@@ -30,12 +30,40 @@ spec:
     loggingService: logging.googleapis.com/kubernetes
     monitoringService: monitoring.googleapis.com/kubernetes
     addonsConfig:
+      cloudRunConfig:
+        disabled: true
+      dnsCacheConfig:
+        enabled: true
       gcePersistentDiskCsiDriverConfig:
         enabled: true
+      horizontalPodAutoscaling:
+        disabled: true
+      httpLoadBalancing:
+        disabled: true
+      istioConfig:
+        disabled: true
+        auth: "AUTH_NONE"
+      kalmConfig:
+        enabled: false
+      kubernetesDashboard:
+        disabled: true
+      networkPolicyConfig:
+        disabled: false
+    binaryAuthorization:
+      enabled: false
+    legacyAbac:
+      enabled: false
     network: portefaix-krm-gcp
+    networkPolicy:
+      enabled: true
+      provider: CALICO
+    podSecurityPolicyConfig:
+      enabled: false
   writeConnectionSecretToRef:
     name: portefaix-krm-gcp-gke
     namespace: crossplane-system
+  providerConfigRef:
+    name: portefaix-gcp
 ---
 apiVersion: container.gcp.crossplane.io/v1beta1
 kind: NodePool
@@ -69,6 +97,8 @@ spec:
     initialNodeCount: 1
     locations:
       - "eu-west1-b"
+  providerConfigRef:
+    name: portefaix-gcp
 ---
 apiVersion: container.gcp.crossplane.io/v1beta1
 kind: NodePool
@@ -102,3 +132,5 @@ spec:
     initialNodeCount: 0
     locations:
       - "eu-west1-b"
+  providerConfigRef:
+    name: portefaix-gcp
