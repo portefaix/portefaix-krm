@@ -19,7 +19,7 @@ metadata:
   name: portefaix-krm-aws
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     # Defined in examples/iam
     roleArnRef:
       name: portefaix-krm-aws-eks-cluster
@@ -54,7 +54,7 @@ metadata:
   name: portefaix-krm-aws-core
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     clusterNameRef:
       name: portefaix-krm-aws
     subnetRefs:

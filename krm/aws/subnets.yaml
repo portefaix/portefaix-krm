@@ -19,7 +19,7 @@ metadata:
   name: portefaix-krm-aws-1
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     tags:
       - key: name
         value: portefaix-krm-aws
@@ -27,7 +27,7 @@ spec:
         value: krm
       - key: made-by
         value: crossplane
-    availabilityZone: us-east-1b
+    availabilityZone: eu-west-3b
     cidrBlock: 10.0.1.0/24
     vpcIdRef:
       name: portefaix-krm-aws
@@ -41,7 +41,7 @@ metadata:
   name: portefaix-krm-aws-2
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     tags:
       - key: name
         value: portefaix-krm-aws
@@ -49,7 +49,7 @@ spec:
         value: krm
       - key: made-by
         value: crossplane
-    availabilityZone: us-east-1c
+    availabilityZone: eu-west-3c
     cidrBlock: 10.0.2.0/24
     vpcIdRef:
       name: portefaix-krm-aws

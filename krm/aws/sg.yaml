@@ -19,7 +19,7 @@ metadata:
   name: portefaix-krm-aws-ssh
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     vpcIdRef:
       name: portefaix-krm-aws
     tags:
@@ -46,7 +46,7 @@ metadata:
   name: portefaix-krm-aws-eks
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     vpcIdRef:
       name: portefaix-krm-aws
     tags:

@@ -19,7 +19,7 @@ metadata:
   name: portefaix-krm-aws-eip
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     domain: "vpc"
   providerConfigRef:
     name: crossplane-aws
@@ -30,7 +30,7 @@ metadata:
   name: portefaix-krm-aws
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     allocationIdRef:
       name: portefaix-krm-aws-nat-gw
     subnetIdRef:

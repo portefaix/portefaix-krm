@@ -19,7 +19,7 @@ metadata:
   name: portefaix-krm-aws
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     tags:
       - key: name
         value: portefaix-krm-aws
