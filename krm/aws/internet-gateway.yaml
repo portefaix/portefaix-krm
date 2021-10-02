@@ -19,7 +19,7 @@ metadata:
   name: portefaix-krm-aws
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     vpcIdRef:
       name: portefaix-krm-aws
   providerConfigRef:
@@ -31,7 +31,7 @@ metadata:
   name: portefaix-krm-aws
 spec:
   forProvider:
-    region: us-east-1
+    region: eu-west-3
     routes:
       - destinationCidrBlock: 0.0.0.0/0
         gatewayIdRef:
