@@ -20,7 +20,6 @@ metadata:
 spec:
   forProvider:
     region: eu-west-3
-    # Defined in examples/iam
     roleArnRef:
       name: portefaix-krm-aws-eks-cluster
     resourcesVpcConfig:
@@ -31,17 +30,15 @@ spec:
         - name: portefaix-krm-aws-2
       securityGroupIdRefs:
         - name: portefaix-krm-aws-eks
-    clusterLogging:
-    - enabled: false
-      types: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+    logging:
+      clusterLogging:
+      - enabled: false
+        types: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
     tags:
-      - key: name
-        value: portefaix-krm-aws
-      - key: service
-        value: kubernetes
-      - key: made-by
-        value: crossplane
-    version: "1.16"
+      Name: portefaix-krm-aws
+      Service: kubernetes
+      Made-by: crossplane
+    version: "1.21"
   writeConnectionSecretToRef:
     name: portefaix-krm-aws-eks
     namespace: crossplane-system
@@ -60,9 +57,29 @@ spec:
     subnetRefs:
       - name: portefaix-krm-aws-1
     nodeRoleRef:
-      name: portefaix-krm-aws-eks-node
+      name: portefaix-krm-aws-node
     scalingConfig:
       desiredSize: 1
+      maxSize: 1
+      minSize: 1 
+  providerConfigRef:
+    name: crossplane-aws
+---
+apiVersion: eks.aws.crossplane.io/v1alpha1
+kind: NodeGroup
+metadata:
+  name: portefaix-krm-aws-ops
+spec:
+  forProvider:
+    region: eu-west-3
+    clusterNameRef:
+      name: portefaix-krm-aws
+    subnetRefs:
+      - name: portefaix-krm-aws-1
+    nodeRoleRef:
+      name: portefaix-krm-aws-node
+    scalingConfig:
+      desiredSize: 0
       maxSize: 1
       minSize: 1 
   providerConfigRef:
