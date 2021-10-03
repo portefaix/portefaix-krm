@@ -14,45 +14,22 @@
 
 ---
 apiVersion: ec2.aws.crossplane.io/v1beta1
-kind: Subnet
+kind: VPC
 metadata:
-  name: portefaix-krm-aws-1
+  name: portefaix-krm-aws
 spec:
   forProvider:
     region: eu-west-3
     tags:
-      - key: name
+      - key: Name
         value: portefaix-krm-aws
-      - key: service
+      - key: Service
         value: krm
-      - key: made-by
+      - key: Made-by
         value: crossplane
-    availabilityZone: eu-west-3b
-    cidrBlock: 10.0.1.0/24
-    vpcIdRef:
-      name: portefaix-krm-aws
-    mapPublicIPOnLaunch: true
-  providerConfigRef:
-    name: crossplane-aws
----
-apiVersion: ec2.aws.crossplane.io/v1beta1
-kind: Subnet
-metadata:
-  name: portefaix-krm-aws-2
-spec:
-  forProvider:
-    region: eu-west-3
-    tags:
-      - key: name
-        value: portefaix-krm-aws
-      - key: service
-        value: krm
-      - key: made-by
-        value: crossplane
-    availabilityZone: eu-west-3c
-    cidrBlock: 10.0.2.0/24
-    vpcIdRef:
-      name: portefaix-krm-aws
-    mapPublicIPOnLaunch: true
+    cidrBlock: 10.1.0.0/16
+    enableDnsSupport: true
+    enableDnsHostNames: true
+    instanceTenancy: default
   providerConfigRef:
     name: crossplane-aws

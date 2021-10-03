@@ -27,20 +27,34 @@ function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
 function echo_info { echo -e "${color_blue}$*${reset_color}"; }
 
 echo_info "[AWS] Configure AWS provider"
-aws_profile=default
-# $(echo -e "[default]\naws_access_key_id = $(aws configure get aws_access_key_id --profile $aws_profile)\naws_secret_access_key = $(aws configure get aws_secret_access_key --profile $aws_profile)" | base64  | tr -d "\n")
+# aws_profile=default
+# # $(echo -e "[default]\naws_access_key_id = $(aws configure get aws_access_key_id --profile $aws_profile)\naws_secret_access_key = $(aws configure get aws_secret_access_key --profile $aws_profile)" | base64  | tr -d "\n")
+# AWS_CREDS_ENCODED=$(cat <<EOF | base64 | tr -d "\n"
+# [default]
+# aws_access_key_id = $(aws configure get aws_access_key_id --profile ${aws_profile})
+# aws_secret_access_key = $(aws configure get aws_secret_access_key --profile ${aws_profile})
+# EOF
+# )
+
+AWS_ACCESS_KEY=$1
+AWS_SECRET_KEY=$2
+if [[ -z "${AWS_ACCESS_KEY}" || -z "${AWS_SECRET_KEY}" ]]; then
+  echo_fail "error reading AWS credentials"
+  exit 1
+fi
 AWS_CREDS_ENCODED=$(cat <<EOF | base64 | tr -d "\n"
 [default]
-aws_access_key_id = $(aws configure get aws_access_key_id --profile ${aws_profile})
-aws_secret_access_key = $(aws configure get aws_secret_access_key --profile ${aws_profile})
+aws_access_key_id = ${AWS_ACCESS_KEY}
+aws_secret_access_key = ${AWS_SECRET_KEY}
 EOF
 )
 
 if [[ -z "${AWS_CREDS_ENCODED}" ]]; then
-  echo_fail "error reading credentials from aws config"
+  echo_fail "error reading AWS credentials"
   exit 1
 fi
 
+echo_info "[Kubernetes] Creates secret for Crossplane AWS provider"
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -49,10 +63,5 @@ metadata:
   namespace: crossplane-system
 type: Opaque
 data:
-  key: ${AWS_CREDS_ENCODED}
+  credentials: ${AWS_CREDS_ENCODED}
 EOF
-
-# echo_info "[Kubernetes] Setup Crossplane AWS provider"
-# kubectl apply -f ${this_dir}/provider-aws.yaml
-# kubectl wait --for condition=Healthy  providers.pkg.crossplane.io/aws
-# kubectl apply -f ${this_dir}/providerconfig-aws.yaml

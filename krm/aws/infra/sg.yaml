@@ -23,11 +23,11 @@ spec:
     vpcIdRef:
       name: portefaix-krm-aws
     tags:
-      - key: name
+      - key: Name
         value: portefaix-krm-aws
-      - key: service
+      - key: Service
         value: krm
-      - key: made-by
+      - key: Made-by
         value: crossplane
     groupName: portefaix-krm-aws-ssh
     description: SSH Connexions

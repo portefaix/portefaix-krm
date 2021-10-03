@@ -13,9 +13,11 @@
 # limitations under the License.
 
 include hack/commons.mk
--include hack/$(CLOUD).$(ENV).mk
+-include hack/kind.$(ENV).mk
 
 KIND_VERSION := $(shell kind --version 2>/dev/null)
+
+HELM_CROSSPLANE_VERSION=1.4.1
 
 
 # ====================================
@@ -91,19 +93,37 @@ kubernetes-secret: guard-NAMESPACE guard-NAME guard-FILE ## Generate a Kubernete
 
 .PHONY: kubernetes-credentials
 kubernetes-credentials: guard-ENV guard-CLOUD ## Generate credentials (CLOUD=xxxx ENV=xxx)
-	make -f hack/$(CLOUD).mk $(CLOUD)-kube-credentials ENV=$(ENV)
-
+	@kubectl config use-context $(KUBE_CONTEXT)
 
 # ====================================
-# H E L M
+# C R O S S P L A N E
 # ====================================
 
 ##@ Helm
 
-.PHONY: helm-crossplane
-helm-crossplane: ## Install Crossplane using Helm
+.PHONY: crossplane-controlplane
+crossplane-controlplane: ## Install Crossplane using Helm
 	@kubectl create namespace crossplane-system
 	@helm repo add crossplane-stable https://charts.crossplane.io/stable
 	@helm repo update
-	@helm install crossplane --namespace crossplane-system crossplane-stable/crossplane
+	@helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --version $(HELM_CROSSPLANE_VERSION)
 
+.PHONY: crossplane-aws-credentials
+crossplane-aws-credentials: guard-AWS_ACCESS_KEY guard-AWS_SECRET_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_KEY=xxx)
+	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY) $(AWS_SECRET_KEY)
+
+.PHONY: crossplane-azure-credentials
+crossplane-azure-credentials: ## Generate credentials for Azure
+	@./hack/scripts/azure.sh
+
+.PHONY: crossplane-provider
+crossplane-provider: guard-CLOUD guard-ACTION ## Setup the Crossplane provider (CLOUD=xxx ACTION=xxx)
+	@kustomize build krm/$(CLOUD)/provider | kubectl $(ACTION) -f -
+
+.PHONY: crossplane-config
+crossplane-config: guard-CLOUD guard-ACTION ## The Crossplane configuration (CLOUD=xxx ACTION=xxx)
+	@kustomize build krm/$(CLOUD)/config | kubectl $(ACTION) -f -
+
+.PHONY: crossplane-infra
+crossplane-infra: guard-CLOUD guard-ACTION ## The Crossplane provider (CLOUD=xxx ACTION=xxx)
+	@kustomize build krm/$(CLOUD)/infra | kubectl $(ACTION) -f -

@@ -6,6 +6,46 @@
 
 Build cloud platform using [Kubernetes Resources Model](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/resource-management.md)
 
+### Core
+
+* Create Kind cluster :
+
+```shell
+> make kind-create ENV=local
+```
+
+* Install Crossplane:
+
+```shell
+> make crossplane-controlplane ACTION=apply
+```
+
+### AWS
+
+* Cloud provider configuration:
+
+```shell
+> make crossplane-aws-credentials AWS_ACCESS_KEY=xxxxxx AWS_SECRET_KEY=xxxxxxxxx
+```
+
+* Install Crossplane provider:
+
+```shell
+> make crossplane-provider CLOUD=aws ACTION=apply
+```
+
+* Setup Crossplane configuration:
+
+```shell
+❯ make crossplane-config CLOUD=aws ACTION=apply
+```
+
+* Deploy infrastructure:
+
+```shell
+❯ make crossplane-infra CLOUD=aws ACTION=apply
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
