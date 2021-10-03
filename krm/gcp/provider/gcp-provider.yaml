@@ -13,18 +13,11 @@
 # limitations under the License.
 
 ---
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- ./network.yaml
-- ./subnetwork.yaml
-- ./firewall.yaml
-- ./iam.yaml
-- ./bucket.yaml
-- ./memorystore.yaml
-- ./cloudsql.yaml
-- ./pubsub.yaml
-- ./gke.yaml
-
-transformers:
-- labels.yaml
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: crossplane-gcp
+spec:
+  package: crossplane/provider-gcp:v0.18.0
+  controllerConfigRef:
+    name: crossplane-gcp
