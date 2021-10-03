@@ -24,7 +24,7 @@ spec:
       name: portefaix-krm-aws
     tags:
       - key: Name
-        value: portefaix-krm-aws
+        value: portefaix-krm-aws-ssh
       - key: Service
         value: krm
       - key: Made-by
@@ -50,11 +50,11 @@ spec:
     vpcIdRef:
       name: portefaix-krm-aws
     tags:
-      - key: name
-        value: portefaix-krm-aws
-      - key: service
+      - key: Name
+        value: portefaix-krm-aws-eks
+      - key: Service
         value: krm
-      - key: made-by
+      - key: Made-by
         value: crossplane
     groupName: portefaix-krm-aws-eks
     description: Cluster communication with worker nodes
