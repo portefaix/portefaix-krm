@@ -40,15 +40,14 @@ spec:
         ]
       }
     tags:
-      - key: name
+      - key: Name
         value: portefaix-krm-aws-eks-cluster
-      - key: service
+      - key: Service
         value: kubernetes
-      - key: made-by
+      - key: Made-by
         value: crossplane
   providerConfigRef:
-    name: example
-
+    name: crossplane-aws
 ---
 apiVersion: identity.aws.crossplane.io/v1beta1
 kind: IAMRole
@@ -74,11 +73,91 @@ spec:
         ]
       }
     tags:
-      - key: name
+      - key: Name
         value: portefaix-krm-aws-eks-node
-      - key: service
+      - key: Service
         value: kubernetes
-      - key: made-by
+      - key: Made-by
         value: crossplane
+  providerConfigRef:
+    name: crossplane-aws
+---
+apiVersion: identity.aws.crossplane.io/v1beta1
+kind: IAMRolePolicyAttachment
+metadata:
+  name: iamattachment-controlplane
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+    roleNameRef:
+      name: portefaix-krm-aws-eks-cluster
+    # roleNameSelector:
+    #   matchControllerRef: true
+    #   matchLabels:
+    #     role: controlplane
+  providerConfigRef:
+    name: crossplane-aws
+---
+apiVersion: identity.aws.crossplane.io/v1beta1
+kind: IAMRolePolicyAttachment
+metadata:
+  name: iamattachment-service
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+    roleNameRef:
+      name: portefaix-krm-aws-eks-cluster
+    # roleNameSelector:
+    #   matchControllerRef: true
+    #   matchLabels:
+    #     role: controlplane
+  providerConfigRef:
+    name: crossplane-aws
+---
+apiVersion: identity.aws.crossplane.io/v1beta1
+kind: IAMRolePolicyAttachment
+metadata:
+  name: iamattachment-worker
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+    roleNameRef:
+      name: portefaix-krm-aws-node
+    # roleNameSelector:
+    #   matchControllerRef: true
+    #   matchLabels:
+    #     role: nodegroup
+  providerConfigRef:
+    name: crossplane-aws
+---
+apiVersion: identity.aws.crossplane.io/v1beta1
+kind: IAMRolePolicyAttachment
+metadata:
+  name: iamattachment-cni
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+    roleNameRef:
+      name: portefaix-krm-aws-node
+    # roleNameSelector:
+    #   matchControllerRef: true
+    #   matchLabels:
+    #     role: nodegroup
+  providerConfigRef:
+    name: crossplane-aws
+---
+apiVersion: identity.aws.crossplane.io/v1beta1
+kind: IAMRolePolicyAttachment
+metadata:
+  name: iamattachment-registry
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+    roleNameRef:
+      name: portefaix-krm-aws-node
+    # roleNameSelector:
+    #   matchControllerRef: true
+    #   matchLabels:
+    #     role: nodegroup
   providerConfigRef:
     name: crossplane-aws

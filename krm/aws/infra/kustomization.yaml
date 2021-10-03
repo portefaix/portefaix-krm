@@ -21,8 +21,8 @@ resources:
 - ./sg.yaml
 # - ./nat-gateway.yaml
 # - ./internet-gateway.yaml
-# - ./iam-eks.yaml
-# - ./eks.yaml
+- ./iam-eks.yaml
+- ./eks.yaml
 
 namespace: crossplane-system
 
