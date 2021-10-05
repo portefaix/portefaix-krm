@@ -16,14 +16,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ./network.yaml
-- ./subnetwork.yaml
-- ./firewall.yaml
-- ./iam.yaml
-- ./bucket.yaml
-- ./memorystore.yaml
-- ./cloudsql.yaml
-- ./pubsub.yaml
+# - ./network.yaml
+# - ./subnetwork.yaml
+# - ./firewall.yaml
+# - ./iam.yaml
+# - ./bucket.yaml
+# - ./memorystore.yaml
+# - ./cloudsql.yaml
+# - ./pubsub.yaml
 - ./gke.yaml
 
 namespace: crossplane-system

@@ -16,7 +16,7 @@
 apiVersion: iam.gcp.crossplane.io/v1alpha1
 kind: ServiceAccount
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm-prometheus
 spec:
   properties:
   forProvider:
@@ -24,41 +24,20 @@ spec:
     description: "Portefaix KRM Crossplane"
   deletionPolicy: Delete
   providerConfigRef:
-    name: portefaix-gcp
----
-apiVersion: iam.gcp.crossplane.io/v1alpha1
-kind: ServiceAccountKey
-metadata:
-  name: portefaix-krm-gcp
-spec:
-  properties:
-  forProvider:
-    # Google Cloud API RRN of a ServiceAccount is expected in "serviceAccount" field
-    # serviceAccount: projects/crossplane-playground/serviceAccounts/perfect-test-sa@crossplane-playground.iam.gserviceaccount.com
-    serviceAccountRef:
-      name: portefaix-krm-gcp
-    # keyAlgorithm: "KEY_ALG_RSA_2048"
-    # privateKeyType: "TYPE_GOOGLE_CREDENTIALS_FILE"
-    # publicKeyType: TYPE_RAW_PUBLIC_KEY
-  deletionPolicy: Delete
-  providerConfigRef:
-    name: portefaix-gcp
-  writeConnectionSecretToRef:
-    name: portefaix-krm-gcp-sa-key
-    namespace: crossplane-system
+    name: crossplane-gcp
 ---
 apiVersion: iam.gcp.crossplane.io/v1alpha1
 kind: ServiceAccountPolicy
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm-prometheus
 spec:
   forProvider:
     serviceAccountRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm-prometheus
     policy:
       bindings:
         - role: roles/iam.workloadIdentityUser
           members:
-            - serviceAccount:portefaix-krm.svc.id.goog[vault-system/vault]
+            - serviceAccount:portefaix-krm.svc.id.goog[monitoring/prometheus]
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp

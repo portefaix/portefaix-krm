@@ -16,7 +16,7 @@
 apiVersion: database.gcp.crossplane.io/v1beta1
 kind: CloudSQLInstance
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
     databaseVersion: POSTGRES_11
@@ -25,8 +25,8 @@ spec:
       tier: db-custom-1-3840
       dataDiskSizeGb: 20
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
   writeConnectionSecretToRef:
-    name: portefaix-krm-gcp-cloudsql
+    name: portefaix-krm-cloudsql
     namespace: crossplane-system
   deletionPolicy: Delete

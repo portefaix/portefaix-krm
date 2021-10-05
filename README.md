@@ -46,6 +46,32 @@ Build cloud platform using [Kubernetes Resources Model](https://github.com/kuber
 ❯ make crossplane-infra CLOUD=aws ACTION=apply
 ```
 
+### GCP
+
+* Cloud provider configuration:
+
+```shell
+> make crossplane-gcp-credentials GCP_PROJECT_ID=myproject-prod GCP_SERVICE_ACCOUNT_NAME=kubernetes-krm
+```
+
+* Install Crossplane provider:
+
+```shell
+> make crossplane-provider CLOUD=gcp ACTION=apply
+```
+
+* Setup Crossplane configuration:
+
+```shell
+❯ make crossplane-config CLOUD=gcp ACTION=apply
+```
+
+* Deploy infrastructure:
+
+```shell
+❯ make crossplane-infra CLOUD=aws ACTION=apply
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)

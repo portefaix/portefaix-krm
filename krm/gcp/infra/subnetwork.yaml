@@ -20,15 +20,15 @@ metadata:
 spec:
   forProvider:
     description: "Portefaix KRM Crossplane"
-    region: eu-west1
-    ipCidrRange: "192.168.0.0/24"
+    region: europe-west1
+    ipCidrRange: "10.11.0.0/20"
     privateIpGoogleAccess: true
     secondaryIpRanges:
       - rangeName: pods
-        ipCidrRange: 10.128.0.0/20
+        ipCidrRange: 10.50.32.0/20
       - rangeName: services
-        ipCidrRange: 172.16.0.0/16
+        ipCidrRange: 10.50.16.0/20
     networkRef:
       name: portefaix-krm-gcp
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp

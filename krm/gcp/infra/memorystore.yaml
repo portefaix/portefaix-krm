@@ -16,7 +16,7 @@
 apiVersion: cache.gcp.crossplane.io/v1beta1
 kind: CloudMemorystoreInstance
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
     displayName: portefaix-krm-crossplane
@@ -26,8 +26,8 @@ spec:
     labels:
       made-by: crossplane
   providerRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
   writeConnectionSecretToRef:
-    name: portefaix-krm-gcp-memorystore
+    name: portefaix-krm-memorystore
     namespace: crossplane-system
   deletionPolicy: Delete

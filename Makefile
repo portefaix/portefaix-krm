@@ -66,11 +66,6 @@ kind-delete: guard-ENV ## Delete a local Kubernetes cluster (ENV=xxx)
 	@echo -e "$(OK_COLOR)[$(APP)] Create Kubernetes cluster ${SERVICE}$(NO_COLOR)"
 	@kind delete cluster --name=$(CLUSTER)
 
-.PHONY: kind-kube-credentials
-kind-kube-credentials: guard-ENV ## Credentials for Kind (ENV=xxx)
-	@kubectl config use-context $(KUBE_CONTEXT)
-
-
 # ====================================
 # K U B E R N E T E S
 # ====================================

@@ -16,7 +16,7 @@
 apiVersion: compute.gcp.crossplane.io/v1alpha1
 kind: Firewall
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
     description: "Portefaix KRM Crossplane"
@@ -24,8 +24,8 @@ spec:
       - IPProtocol: tcp
         ports: ["80", "443"]
       - IPProtocol: icmp
-    sourceRanges: ["10.0.0.0/24"]
+    sourceRanges: ["10.11.0.0/20"]
     networkRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
