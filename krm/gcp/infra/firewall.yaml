@@ -13,20 +13,19 @@
 # limitations under the License.
 
 ---
-apiVersion: database.gcp.crossplane.io/v1beta1
-kind: CloudSQLInstance
+apiVersion: compute.gcp.crossplane.io/v1alpha1
+kind: Firewall
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
-    databaseVersion: POSTGRES_11
-    region: eu-west1
-    settings:
-      tier: db-custom-1-3840
-      dataDiskSizeGb: 20
+    description: "Portefaix KRM Crossplane"
+    allowed:
+      - IPProtocol: tcp
+        ports: ["80", "443"]
+      - IPProtocol: icmp
+    sourceRanges: ["10.11.0.0/20"]
+    networkRef:
+      name: portefaix-krm
   providerConfigRef:
-    name: portefaix-gcp
-  writeConnectionSecretToRef:
-    name: portefaix-krm-gcp-cloudsql
-    namespace: crossplane-system
-  deletionPolicy: Delete
+    name: crossplane-gcp

@@ -16,14 +16,14 @@
 apiVersion: pubsub.gcp.crossplane.io/v1alpha1
 kind: Topic
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
     labels:
-      crossplane: provider-gcp
+      crossplane: provider
   writeConnectionSecretToRef:
-    name: portefaix-krm-gcp-pubsub
+    name: portefaix-krm-pubsub
     namespace: crossplane-system
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
   deletionPolicy: Delete

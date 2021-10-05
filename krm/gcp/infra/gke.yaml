@@ -16,13 +16,11 @@
 apiVersion: container.gcp.crossplane.io/v1beta2
 kind: Cluster
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
     # initialClusterVersion: "1.21"
-    releaseChannel:
-      channel: REGULAR
-    location: eu-west1
+    location: europe-west1-c
     masterAuth:
       # setting this master auth user name enables basic auth so that a client (e.g.,
       # provider-helm), can connect with the generated kubeconfig from the connection secret
@@ -34,6 +32,9 @@ spec:
     addonsConfig:
       cloudRunConfig:
         disabled: true
+        loadBalancerType: LOAD_BALANCER_TYPE_UNSPECIFIED
+      configConnectorConfig:
+        enabled: false
       dnsCacheConfig:
         enabled: true
       gcePersistentDiskCsiDriverConfig:
@@ -42,44 +43,57 @@ spec:
         disabled: true
       httpLoadBalancing:
         disabled: true
-      istioConfig:
-        disabled: true
-        auth: "AUTH_NONE"
-      kalmConfig:
-        enabled: false
       kubernetesDashboard:
         disabled: true
       networkPolicyConfig:
         disabled: false
+    autopilot:
+      enabled: false
     binaryAuthorization:
       enabled: false
+    confidentialNodes:
+      enabled: false
+    # defaultMaxPodsConstraint:
+    #    maxPodsPerNode: 110
+    maintenancePolicy:
+      window:
+        dailyMaintenanceWindow:
     legacyAbac:
       enabled: false
-    network: portefaix-krm-gcp
+    networkRef:
+      name: portefaix-krm
+    subnetworkRef:
+      name: portefaix-krm
     networkPolicy:
       enabled: true
       provider: CALICO
-    podSecurityPolicyConfig:
-      enabled: false
+    releaseChannel:
+      channel: REGULAR
+    # resourceLabels:
+    #   service: kubernetes
+    #   role: cluster
+    #   made-by: crossplane
+    # workloadIdentityConfig:
+    #   workloadPool: portefaix-krm #.svc.id.goog
   writeConnectionSecretToRef:
-    name: portefaix-krm-gcp-gke
+    name: portefaix-krm-gke
     namespace: crossplane-system
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
 ---
 apiVersion: container.gcp.crossplane.io/v1beta1
 kind: NodePool
 metadata:
-  name: portefaix-krm-gcp-core
+  name: portefaix-krm-core
 spec:
   forProvider:
     autoscaling:
       autoprovisioned: false
       enabled: true
-      maxNodeCount: 3
-      minNodeCount: 0
+      maxNodeCount: 4
+      minNodeCount: 2
     clusterRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm
     config:
       machineType: n1-standard-1
       sandboxConfig:
@@ -87,8 +101,10 @@ spec:
       diskSizeGb: 120
       diskType: pd-ssd
       imageType: cos_containerd
-      labels:
-        made-by: crossplane
+      # labels:
+      #   service: kubernetes
+      #   role: node
+      #   made-by: crossplane
       tags:
         - kubernetes
         - nodes
@@ -99,19 +115,19 @@ spec:
       - "https://www.googleapis.com/auth/servicecontrol"
       - "https://www.googleapis.com/auth/service.management.readonly"
       - "https://www.googleapis.com/auth/trace.append"
-    initialNodeCount: 1
+    initialNodeCount: 2
     locations:
-      - "eu-west1-b"
+      - europe-west1-c
     management:
       autoRepair: true
       autoUpgrade: true
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
 ---
 apiVersion: container.gcp.crossplane.io/v1beta1
 kind: NodePool
 metadata:
-  name: portefaix-krm-gcp-ops
+  name: portefaix-krm-ops
 spec:
   forProvider:
     autoscaling:
@@ -120,7 +136,7 @@ spec:
       maxNodeCount: 3
       minNodeCount: 0
     clusterRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm
     config:
       machineType: n1-standard-1
       sandboxConfig:
@@ -128,8 +144,10 @@ spec:
       diskSizeGb: 120
       diskType: pd-ssd
       imageType: cos_containerd
-      labels:
-        made-by: crossplane
+      # labels:
+      #   service: kubernetes
+      #   role: node
+      #   made-by: crossplane
       tags:
         - kubernetes
         - nodes
@@ -142,17 +160,17 @@ spec:
       - "https://www.googleapis.com/auth/trace.append"
     initialNodeCount: 0
     locations:
-      - "eu-west1-b"
+      - europe-west1-c
     management:
       autoRepair: true
       autoUpgrade: true
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
 ---
 apiVersion: container.gcp.crossplane.io/v1beta1
 kind: NodePool
 metadata:
-  name: portefaix-krm-gcp-misc
+  name: portefaix-krm-misc
 spec:
   forProvider:
     autoscaling:
@@ -161,7 +179,7 @@ spec:
       maxNodeCount: 3
       minNodeCount: 0
     clusterRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm
     config:
       machineType: n1-standard-1
       sandboxConfig:
@@ -169,8 +187,10 @@ spec:
       diskSizeGb: 120
       diskType: pd-ssd
       imageType: cos_containerd
-      labels:
-        made-by: crossplane
+      # labels:
+      #   service: kubernetes
+      #   role: node
+      #   made-by: crossplane
       tags:
         - kubernetes
         - nodes
@@ -184,9 +204,9 @@ spec:
       - "https://www.googleapis.com/auth/trace.append"
     initialNodeCount: 0
     locations:
-      - "eu-west1-b"
+      - europe-west1-c
     management:
       autoRepair: true
       autoUpgrade: true
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp

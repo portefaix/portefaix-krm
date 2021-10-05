@@ -16,14 +16,14 @@
 apiVersion: storage.gcp.crossplane.io/v1alpha3
 kind: Bucket
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
   annotations:
-    crossplane.io/external-name: portefaix-krm-gcp-bucket
+    crossplane.io/external-name: portefaix-krm-bucket
 spec:
   location: EU
   storageClass: MULTI_REGIONAL
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
   labels:
     made-by: crossplane
   deletionPolicy: Delete
@@ -31,11 +31,11 @@ spec:
 apiVersion: storage.gcp.crossplane.io/v1alpha1
 kind: BucketPolicy
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
     bucketRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm
     policy:
       bindings:
         # - role: roles/storage.legacyBucketOwner
@@ -47,21 +47,21 @@ spec:
         #     - "projectViewer:<gcp-project>"
         - role: roles/storage.objectAdmin
           serviceAccountMemberRefs:
-            - name: portefaix-krm-gcp
+            - name: portefaix-krm
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp
 ---
 apiVersion: storage.gcp.crossplane.io/v1alpha1
 kind: BucketPolicyMember
 metadata:
-  name: portefaix-krm-gcp
+  name: portefaix-krm
 spec:
   forProvider:
     bucketRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm
     # member: serviceAccount:<my-sa-email>
     serviceAccountMemberRef:
-      name: portefaix-krm-gcp
+      name: portefaix-krm
     role: roles/storage.objectAdmin
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp

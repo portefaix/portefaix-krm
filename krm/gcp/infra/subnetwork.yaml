@@ -14,14 +14,21 @@
 
 ---
 apiVersion: compute.gcp.crossplane.io/v1beta1
-kind: Network
+kind: Subnetwork
 metadata:
   name: portefaix-krm-gcp
 spec:
   forProvider:
     description: "Portefaix KRM Crossplane"
-    autoCreateSubnetworks: false
-    routingConfig:
-      routingMode: REGIONAL
+    region: europe-west1
+    ipCidrRange: "10.11.0.0/20"
+    privateIpGoogleAccess: true
+    secondaryIpRanges:
+      - rangeName: pods
+        ipCidrRange: 10.50.32.0/20
+      - rangeName: services
+        ipCidrRange: 10.50.16.0/20
+    networkRef:
+      name: portefaix-krm-gcp
   providerConfigRef:
     name: crossplane-gcp

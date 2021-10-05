@@ -13,22 +13,13 @@
 # limitations under the License.
 
 ---
-apiVersion: compute.gcp.crossplane.io/v1beta1
-kind: Subnetwork
-metadata:
-  name: portefaix-krm-gcp
-spec:
-  forProvider:
-    description: "Portefaix KRM Crossplane"
-    region: eu-west1
-    ipCidrRange: "192.168.0.0/24"
-    privateIpGoogleAccess: true
-    secondaryIpRanges:
-      - rangeName: pods
-        ipCidrRange: 10.128.0.0/20
-      - rangeName: services
-        ipCidrRange: 172.16.0.0/16
-    networkRef:
-      name: portefaix-krm-gcp
-  providerConfigRef:
-    name: portefaix-gcp
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ./gcp-controller-config.yaml
+- ./gcp-provider.yaml
+
+namespace: crossplane-system
+
+transformers:
+- labels.yaml

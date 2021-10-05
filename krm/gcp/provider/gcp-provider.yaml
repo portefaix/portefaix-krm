@@ -13,21 +13,11 @@
 # limitations under the License.
 
 ---
-apiVersion: cache.gcp.crossplane.io/v1beta1
-kind: CloudMemorystoreInstance
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
 metadata:
-  name: portefaix-krm-gcp
+  name: crossplane-gcp
 spec:
-  forProvider:
-    displayName: portefaix-krm-crossplane
-    tier: STANDARD_HA
-    region: eu-west1
-    memorySizeGb: 1
-    labels:
-      made-by: crossplane
-  providerRef:
-    name: portefaix-gcp
-  writeConnectionSecretToRef:
-    name: portefaix-krm-gcp-memorystore
-    namespace: crossplane-system
-  deletionPolicy: Delete
+  package: crossplane/provider-gcp:v0.18.0
+  controllerConfigRef:
+    name: crossplane-gcp

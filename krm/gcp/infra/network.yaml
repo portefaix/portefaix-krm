@@ -13,19 +13,15 @@
 # limitations under the License.
 
 ---
-apiVersion: compute.gcp.crossplane.io/v1alpha1
-kind: Firewall
+apiVersion: compute.gcp.crossplane.io/v1beta1
+kind: Network
 metadata:
   name: portefaix-krm-gcp
 spec:
   forProvider:
     description: "Portefaix KRM Crossplane"
-    allowed:
-      - IPProtocol: tcp
-        ports: ["80", "443"]
-      - IPProtocol: icmp
-    sourceRanges: ["10.0.0.0/24"]
-    networkRef:
-      name: portefaix-krm-gcp
+    autoCreateSubnetworks: false
+    routingConfig:
+      routingMode: GLOBAL
   providerConfigRef:
-    name: portefaix-gcp
+    name: crossplane-gcp

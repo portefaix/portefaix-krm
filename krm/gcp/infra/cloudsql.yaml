@@ -13,18 +13,20 @@
 # limitations under the License.
 
 ---
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- ./network.yaml
-- ./subnetwork.yaml
-- ./firewall.yaml
-- ./iam.yaml
-- ./bucket.yaml
-- ./memorystore.yaml
-- ./cloudsql.yaml
-- ./pubsub.yaml
-- ./gke.yaml
-
-transformers:
-- labels.yaml
+apiVersion: database.gcp.crossplane.io/v1beta1
+kind: CloudSQLInstance
+metadata:
+  name: portefaix-krm
+spec:
+  forProvider:
+    databaseVersion: POSTGRES_11
+    region: eu-west1
+    settings:
+      tier: db-custom-1-3840
+      dataDiskSizeGb: 20
+  providerConfigRef:
+    name: crossplane-gcp
+  writeConnectionSecretToRef:
+    name: portefaix-krm-cloudsql
+    namespace: crossplane-system
+  deletionPolicy: Delete

@@ -66,11 +66,6 @@ kind-delete: guard-ENV ## Delete a local Kubernetes cluster (ENV=xxx)
 	@echo -e "$(OK_COLOR)[$(APP)] Create Kubernetes cluster ${SERVICE}$(NO_COLOR)"
 	@kind delete cluster --name=$(CLUSTER)
 
-.PHONY: kind-kube-credentials
-kind-kube-credentials: guard-ENV ## Credentials for Kind (ENV=xxx)
-	@kubectl config use-context $(KUBE_CONTEXT)
-
-
 # ====================================
 # K U B E R N E T E S
 # ====================================
@@ -96,10 +91,29 @@ kubernetes-credentials: guard-ENV guard-CLOUD ## Generate credentials (CLOUD=xxx
 	@kubectl config use-context $(KUBE_CONTEXT)
 
 # ====================================
+# C L O U D
+# ====================================
+
+##@ Cloud
+
+.PHONY: cloud-gcp-credentials
+cloud-gcp-credentials: guard-GCP_PROJECT_ID guard-GCP_SERVICE_ACCOUNT_NAME ## Generate credentials for GCP (GCP_PROJECT_ID=xxx GCP_SERVICE_ACCOUNT_NAME=xxx GCP_SERVICE_ACCOUNT_KEYFILE=xxx)
+	@./hack/scripts/gcp.sh $(GCP_PROJECT_ID) $(GCP_SERVICE_ACCOUNT_NAME)
+
+.PHONY: cloud-aws-credentials
+cloud-aws-credentials: guard-AWS_ACCESS_KEY guard-AWS_SECRET_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_KEY=xxx)
+	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY) $(AWS_SECRET_KEY)
+
+.PHONY: cloud-azure-credentials
+cloud-azure-credentials: ## Generate credentials for Azure
+	@./hack/scripts/azure.sh
+
+
+# ====================================
 # C R O S S P L A N E
 # ====================================
 
-##@ Helm
+##@ Crossplane
 
 .PHONY: crossplane-controlplane
 crossplane-controlplane: ## Install Crossplane using Helm
@@ -107,14 +121,6 @@ crossplane-controlplane: ## Install Crossplane using Helm
 	@helm repo add crossplane-stable https://charts.crossplane.io/stable
 	@helm repo update
 	@helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --version $(HELM_CROSSPLANE_VERSION)
-
-.PHONY: crossplane-aws-credentials
-crossplane-aws-credentials: guard-AWS_ACCESS_KEY guard-AWS_SECRET_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_KEY=xxx)
-	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY) $(AWS_SECRET_KEY)
-
-.PHONY: crossplane-azure-credentials
-crossplane-azure-credentials: ## Generate credentials for Azure
-	@./hack/scripts/azure.sh
 
 .PHONY: crossplane-provider
 crossplane-provider: guard-CLOUD guard-ACTION ## Setup the Crossplane provider (CLOUD=xxx ACTION=xxx)
