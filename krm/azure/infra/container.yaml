@@ -13,31 +13,15 @@
 # limitations under the License.
 
 ---
-apiVersion: azure.crossplane.io/v1alpha3
-kind: ResourceGroup
-metadata:
-  name: portefaix-krm-azure-account
-spec:
-  location: West Europe
-  providerConfigRef:
-    name: crossplane-azure
----
 apiVersion: storage.azure.crossplane.io/v1alpha3
-kind: Account
+kind: Container
 metadata:
-  name: portefaix-krm-azure
+  name: portefaix-krm
 spec:
-  resourceGroupNameRef:
-    name: portefaix-krm-azure-account
-  storageAccountSpec:
-    kind: Storage
-    location: West Europe
-    sku:
-      name: Standard_LRS
-      tier: Standard
+  publicAccessType: container
   deletionPolicy: Delete
   providerConfigRef:
-    name: portefaix-azure
+    name: crossplane-azure
   writeConnectionSecretToRef:
-    name: portefaix-krm-azure-account
+    name: portefaix-krm-container
     namespace: crossplane-system

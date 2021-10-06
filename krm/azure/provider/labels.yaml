@@ -13,15 +13,20 @@
 # limitations under the License.
 
 ---
-apiVersion: storage.azure.crossplane.io/v1alpha3
-kind: Container
+apiVersion: builtin
+kind: LabelTransformer
 metadata:
-  name: portefaix-krm-azure
-spec:
-  publicAccessType: container
-  deletionPolicy: Delete
-  providerRef:
-    name: azure
-  writeConnectionSecretToRef:
-    name: portefaix-krm-azure-container
-    namespace: crossplane-system
+  name: labels
+labels:
+  app.kubernetes.io/name: portefaix-krm-aws
+  app.kubernetes.io/instance: portefaix-krm-aws-app
+  app.kubernetes.io/component: krm-crossplane
+  app.kubernetes.io/version: v0.1.0
+  app.kubernetes.io/part-of: portefaix-krm-aws
+  app.kubernetes.io/managed-by: kustomize
+  portefaix.xyz/version: v0.19.0
+  crossplane.io/version: v0.14.0
+  crossplane.io/provider: aws-v0.19.0
+fieldSpecs:
+- path: metadata/labels
+  create: true
