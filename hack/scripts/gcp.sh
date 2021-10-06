@@ -90,7 +90,7 @@ if [[ -z "${GCP_CREDS_ENCODED}" ]]; then
   exit 1
 fi
 
-echo_info "[Kubernetes] Creates secret for Crossplane AWS provider"
+echo_info "[Kubernetes] Creates secret for Crossplane GCP provider"
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret

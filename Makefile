@@ -105,8 +105,8 @@ cloud-aws-credentials: guard-AWS_ACCESS_KEY guard-AWS_SECRET_KEY ## Generate cre
 	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY) $(AWS_SECRET_KEY)
 
 .PHONY: cloud-azure-credentials
-cloud-azure-credentials: ## Generate credentials for Azure
-	@./hack/scripts/azure.sh
+cloud-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NAME ## Generate credentials for Azure
+	@./hack/scripts/azure.sh $(AZURE_SUBSCRIPTION_ID) $(AZURE_PROJECT_NAME)
 
 
 # ====================================
