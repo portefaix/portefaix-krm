@@ -26,18 +26,37 @@ function echo_fail { echo -e "${color_red}✖ $*${reset_color}"; }
 function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
 function echo_info { echo -e "${color_blue}$*${reset_color}"; }
 
-echo_info "[Azure] Create ServicePrincipal"
-azure_creds=$(az ad sp create-for-rbac \
-    --name 'crossplane' \
-    --role owner \
-    --sdk-auth 2> /dev/null | \
-        base64 | tr -d "\n")
+echo_info "[Azure] Configure Azure provider"
 
-if [[ -z "${azure_creds}" ]]; then
-  echo_fail "error reading credentials from az CLI output"
+AZURE_SUBSCRIPTION_ID=$1
+[ -z "${AZURE_SUBSCRIPTION_ID}" ] && echo_fail "Azure subscription not satisfied" && exit 1
+AZURE_PROJECT_NAME=$2
+[ -z "${AZURE_PROJECT_NAME}" ] && echo_fail "Azure project not satisfied" && exit 1
+
+# az ad sp create-for-rbac --sdk-auth --role Owner > ${AZURE_PROJECT_NAME}.json
+
+AZURE_CLIENT_ID=$(jq -r .clientId < ${AZURE_PROJECT_NAME}.json)
+echo_info "[Azure] Add permission to client: ${AZURE_CLIENT_ID}"
+
+AZURE_AD_ID="00000002-0000-0000-c000-000000000000"
+
+az ad app permission add --id ${AZURE_CLIENT_ID} \
+   --api ${AZURE_AD_ID} \
+   --api-permissions 1cda74f2-2616-4834-b122-5cb1b07f8a59=Role \
+   --api-permissions 78c8a3c8-a07e-4b9e-af1b-b5ccab50a175=Role
+
+az ad app permission grant --id ${AZURE_CLIENT_ID} --api ${AZURE_AD_ID} --expires never
+
+az ad app permission admin-consent --id "${AZURE_CLIENT_ID}"
+
+AZURE_CREDS_ENCODED=$(base64 ${AZURE_PROJECT_NAME}.json | tr -d "\n")
+
+if [[ -z "${AZURE_CREDS_ENCODED}" ]]; then
+  echo_fail "error reading credentials from Azure CLI output"
   exit 1
 fi
 
+echo_info "[Kubernetes] Creates secret for Crossplane Azure provider"
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -46,10 +65,5 @@ metadata:
   namespace: crossplane-system
 type: Opaque
 data:
-  credentials: ${azure_creds}
+  credentials: ${AZURE_CREDS_ENCODED}
 EOF
-
-# echo_info "[Kubernetes] Setup Crossplane Azure provider"
-# kubectl apply -f ${this_dir}/provider-azure.yaml
-# kubectl wait --for condition=Healthy providers.pkg.crossplane.io/azure
-# kubectl apply -f ${this_dir}/providerconfig-azure.yaml

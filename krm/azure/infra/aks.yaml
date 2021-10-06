@@ -13,16 +13,32 @@
 # limitations under the License.
 
 ---
-apiVersion: network.azure.crossplane.io/v1alpha3
-kind: Subnet
+apiVersion: azure.crossplane.io/v1alpha3
+kind: ResourceGroup
 metadata:
-  name: portefaix-krm-azure
+  name: portefaix-krm-aks
+spec:
+  location: West Europe
+  providerConfigRef:
+    name: crossplane-azure
+---
+apiVersion: compute.azure.crossplane.io/v1alpha3
+kind: AKSCluster
+metadata:
+  name: portefaix-krm
 spec:
   resourceGroupNameRef:
-    name: portefaix-krm-azure
-  virtualNetworkNameRef:
-    name: portefaix-krm-azure
-  properties:
-    addressPrefix: 10.2.0.0/24
+    name: portefaix-krm-aks
+  vnetSubnetIDRef:
+    name: portefaix-krm
+  location: West Europe
+  version: 1.21.1
+  nodeCount: 1
+  nodeVMSize: Standard_B2s
+  dnsNamePrefix: portefaix-krm-aks
+  disableRBAC: false
   providerConfigRef:
-    name: portefaix-azure
+    name: crossplane-azure
+  writeConnectionSecretToRef:
+    name: portefaix-krm-aks
+    namespace: crossplane-system

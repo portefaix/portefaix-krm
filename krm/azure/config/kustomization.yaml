@@ -16,15 +16,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ./resourcegroup.yaml
-- ./vnet.yaml
-- ./subnet.yaml
-- ./account.yaml
-- ./container.yaml
-- ./mysql.yaml
-- ./postgresql.yaml
-- ./redis.yaml
-- ./aks.yaml
+- ./azure-config.yaml
+
+namespace: crossplane-system
 
 transformers:
 - labels.yaml

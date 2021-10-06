@@ -20,56 +20,50 @@ Build cloud platform using [Kubernetes Resources Model](https://github.com/kuber
 > make crossplane-controlplane ACTION=apply
 ```
 
-### AWS
+### Cloud provider credentials
 
-* Cloud provider configuration:
+* AWS
 
 ```shell
 > make crossplane-aws-credentials AWS_ACCESS_KEY=xxxxxx AWS_SECRET_KEY=xxxxxxxxx
 ```
 
-* Install Crossplane provider:
-
-```shell
-> make crossplane-provider CLOUD=aws ACTION=apply
-```
-
-* Setup Crossplane configuration:
-
-```shell
-❯ make crossplane-config CLOUD=aws ACTION=apply
-```
-
-* Deploy infrastructure:
-
-```shell
-❯ make crossplane-infra CLOUD=aws ACTION=apply
-```
-
-### GCP
-
-* Cloud provider configuration:
+* GCP
 
 ```shell
 > make crossplane-gcp-credentials GCP_PROJECT_ID=myproject-prod GCP_SERVICE_ACCOUNT_NAME=kubernetes-krm
 ```
 
+* Azure
+
+```shell
+> make crossplane-azure-credentials AZURE_SUBSCRIPTION_ID=xxxxxxx AZURE_PROJECT_NAME=xxxxxx
+```
+
+### Crossplane Cloud Provider configuration
+
+* Choose the cloud provider (`aws`, `gcp` or `azure`)
+
+```shell
+> export CROSSPLANE_CLOUD_PROVIDER=xxx
+```
+
 * Install Crossplane provider:
 
 ```shell
-> make crossplane-provider CLOUD=gcp ACTION=apply
+> make crossplane-provider CLOUD=${CROSSPLANE_CLOUD_PROVIDER} ACTION=apply
 ```
 
 * Setup Crossplane configuration:
 
 ```shell
-❯ make crossplane-config CLOUD=gcp ACTION=apply
+❯ make crossplane-config CLOUD=${CROSSPLANE_CLOUD_PROVIDER} ACTION=apply
 ```
 
 * Deploy infrastructure:
 
 ```shell
-❯ make crossplane-infra CLOUD=aws ACTION=apply
+❯ make crossplane-infra CLOUD=${CROSSPLANE_CLOUD_PROVIDER} ACTION=apply
 ```
 
 ## Contributing
