@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,16 @@ KIND_VERSION := $(shell kind --version 2>/dev/null)
 
 HELM_CROSSPLANE_VERSION=1.4.1
 
+KIND_VERSION = v0.14.0
+
+CROSSPLANE_NAMESPACE = crossplane-system
+
+ACK_SYSTEM_NAMESPACE = ack-system
+AWS_REGION = us-west-2
+ACK_ECR_VERSION = v0.1.5
+ACK_EKS_VERSION = v0.1.5
+ACK_IAM_VERSION = v0.0.19
+ACK_S3_VERSION = v0.1.4
 
 # ====================================
 # D E V E L O P M E N T
@@ -51,7 +61,7 @@ kind-install: ## Install Kind
 ifdef KIND_VERSION
 	@echo "Found version $(KIND_VERSION)"
 else
-	@curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
+	@curl -Lo ./kind https://kind.sigs.k8s.io/dl/$(KIND_VERSION)kind-linux-amd64
 	@chmod +x ./kind
 	@mv ./kind /bin/kind
 endif
@@ -63,7 +73,7 @@ kind-create: guard-ENV ## Creates a local Kubernetes cluster (ENV=xxx)
 
 .PHONY: kind-delete
 kind-delete: guard-ENV ## Delete a local Kubernetes cluster (ENV=xxx)
-	@echo -e "$(OK_COLOR)[$(APP)] Create Kubernetes cluster ${SERVICE}$(NO_COLOR)"
+	@echo -e "$(OK_COLOR)[$(APP)] Delete Kubernetes cluster ${SERVICE}$(NO_COLOR)"
 	@kind delete cluster --name=$(CLUSTER)
 
 # ====================================
@@ -91,25 +101,6 @@ kubernetes-credentials: guard-ENV guard-CLOUD ## Generate credentials (CLOUD=xxx
 	@kubectl config use-context $(KUBE_CONTEXT)
 
 # ====================================
-# C L O U D
-# ====================================
-
-##@ Cloud
-
-.PHONY: cloud-gcp-credentials
-cloud-gcp-credentials: guard-GCP_PROJECT_ID guard-GCP_SERVICE_ACCOUNT_NAME ## Generate credentials for GCP (GCP_PROJECT_ID=xxx GCP_SERVICE_ACCOUNT_NAME=xxx GCP_SERVICE_ACCOUNT_KEYFILE=xxx)
-	@./hack/scripts/gcp.sh $(GCP_PROJECT_ID) $(GCP_SERVICE_ACCOUNT_NAME)
-
-.PHONY: cloud-aws-credentials
-cloud-aws-credentials: guard-AWS_ACCESS_KEY guard-AWS_SECRET_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_KEY=xxx)
-	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY) $(AWS_SECRET_KEY)
-
-.PHONY: cloud-azure-credentials
-cloud-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NAME ## Generate credentials for Azure
-	@./hack/scripts/azure.sh $(AZURE_SUBSCRIPTION_ID) $(AZURE_PROJECT_NAME)
-
-
-# ====================================
 # C R O S S P L A N E
 # ====================================
 
@@ -117,10 +108,9 @@ cloud-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NAME ##
 
 .PHONY: crossplane-controlplane
 crossplane-controlplane: ## Install Crossplane using Helm
-	@kubectl create namespace crossplane-system
 	@helm repo add crossplane-stable https://charts.crossplane.io/stable
 	@helm repo update
-	@helm install crossplane --namespace crossplane-system crossplane-stable/crossplane --version $(HELM_CROSSPLANE_VERSION)
+	@helm install crossplane --create-namespace --namespace $(CROSSPLANE_NAMESPACE) crossplane-stable/crossplane --version $(HELM_CROSSPLANE_VERSION)
 
 .PHONY: crossplane-provider
 crossplane-provider: guard-CLOUD guard-ACTION ## Setup the Crossplane provider (CLOUD=xxx ACTION=xxx)
@@ -133,3 +123,43 @@ crossplane-config: guard-CLOUD guard-ACTION ## The Crossplane configuration (CLO
 .PHONY: crossplane-infra
 crossplane-infra: guard-CLOUD guard-ACTION ## The Crossplane provider (CLOUD=xxx ACTION=xxx)
 	@kustomize build krm/$(CLOUD)/infra | kubectl $(ACTION) -f -
+
+.PHONY: crossplane-gcp-credentials
+crossplane-gcp-credentials: guard-GCP_PROJECT_ID guard-GCP_SERVICE_ACCOUNT_NAME ## Generate credentials for GCP (GCP_PROJECT_ID=xxx GCP_SERVICE_ACCOUNT_NAME=xxx GCP_SERVICE_ACCOUNT_KEYFILE=xxx)
+	@./hack/scripts/gcp.sh $(GCP_PROJECT_ID) $(GCP_SERVICE_ACCOUNT_NAME)
+
+.PHONY: crossplane-aws-credentials
+crossplane-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
+	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) crossplane-aws-credentials crossplane-system
+
+.PHONY: crossplane-azure-credentials
+crossplane-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NAME ## Generate credentials for Azure
+	@./hack/scripts/azure.sh $(AZURE_SUBSCRIPTION_ID) $(AZURE_PROJECT_NAME)
+
+
+# ====================================
+# ACK
+# ====================================
+
+.PHONY: ack-aws
+ack-aws: ## Authentication on the ECR public Helm registry
+	aws ecr-public get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin public.ecr.aws
+
+.PHONY: ack-aws-credentials
+ack-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
+	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) ack-aws-credentials ack-system
+
+.PHONY: ack-controlplane
+ack-controlplane: ## Install the ACK controllers
+	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-ecr-controller \
+		oci://public.ecr.aws/aws-controllers-k8s/ecr-chart --version=$(ACK_ECR_VERSION) \
+		-f krm/ack/ecr-values.yaml
+	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-eks-controller \
+		oci://public.ecr.aws/aws-controllers-k8s/eks-chart --version=$(ACK_EKS_VERSION) \
+		-f krm/ack/eks-values.yaml
+	helm install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-iam-controller \
+		oci://public.ecr.aws/aws-controllers-k8s/iam-chart --version=$(ACK_IAM_VERSION) \
+		-f krm/ack/iam-values.yaml
+	helm install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-s3-controller \
+		oci://public.ecr.aws/aws-controllers-k8s/s3-chart --version=$(ACK_S3_VERSION) \
+		-f krm/ack/s3-values.yaml

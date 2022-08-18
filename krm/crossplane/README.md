@@ -3,13 +3,13 @@
 * Create Kind cluster :
 
 ```shell
-> make kind-create ENV=local
+> make kind-create ENV=crossplane
 ```
 
 * Install Crossplane:
 
 ```shell
-> make crossplane-controlplane ACTION=apply
+> make crossplane-controlplane ENV=crossplane
 ```
 
 ### Cloud provider credentials

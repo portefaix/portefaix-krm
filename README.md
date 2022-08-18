@@ -13,7 +13,6 @@ Tools:
 * [Config Connector](https://cloud.google.com/config-connector/docs/overview)
 * [Azure Service Operator](https://github.com/Azure/azure-service-operator)
 
-
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
