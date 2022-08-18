@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-CLUSTER_local = portefaix-krm-local
+CLUSTER_aws = portefaix-krm-aws
 
-KUBE_CONTEXT_local = kind-portefaix-krm-local
+KUBE_CONTEXT_aws = kind-portefaix-krm-aws

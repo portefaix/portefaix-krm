@@ -19,8 +19,8 @@ color_red="\\e[31m"
 color_green="\\e[32m"
 color_blue="\\e[36m";
 
-declare -r this_dir=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
-declare -r root_dir=$(cd ${this_dir}/../.. && pwd)
+# declare -r this_dir=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
+# declare -r root_dir=$(cd ${this_dir}/../.. && pwd)
 
 function echo_fail { echo -e "${color_red}✖ $*${reset_color}"; }
 function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
@@ -36,15 +36,17 @@ echo_info "[AWS] Configure AWS provider"
 # EOF
 # )
 
-AWS_ACCESS_KEY=$1
+AWS_ACCESS_KEY_ID=$1
 AWS_SECRET_KEY=$2
-if [[ -z "${AWS_ACCESS_KEY}" || -z "${AWS_SECRET_KEY}" ]]; then
+SECRET_NAME=$3
+NAMESPACE=$4
+if [[ -z "${AWS_ACCESS_KEY_ID}" || -z "${AWS_SECRET_KEY}" ]]; then
   echo_fail "error reading AWS credentials"
   exit 1
 fi
 AWS_CREDS_ENCODED=$(cat <<EOF | base64 | tr -d "\n"
 [default]
-aws_access_key_id = ${AWS_ACCESS_KEY}
+aws_access_key_id = ${AWS_ACCESS_KEY_ID}
 aws_secret_access_key = ${AWS_SECRET_KEY}
 EOF
 )
@@ -54,13 +56,13 @@ if [[ -z "${AWS_CREDS_ENCODED}" ]]; then
   exit 1
 fi
 
-echo_info "[Kubernetes] Creates secret for Crossplane AWS provider"
+echo_info "[Kubernetes] AWS: Create secret ${SECRET_NAME} into ${NAMESPACE}"
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
-  name: crossplane-aws-credentials
-  namespace: crossplane-system
+  name: ${SECRET_NAME}
+  namespace: ${NAMESPACE}
 type: Opaque
 data:
   credentials: ${AWS_CREDS_ENCODED}
