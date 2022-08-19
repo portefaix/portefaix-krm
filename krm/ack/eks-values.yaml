@@ -33,4 +33,13 @@ aws:
     # Secret stringData key that contains the credentials
     secretKey: "credentials"
     # Profile used for AWS credentials
-    # profile: "default"  
+    # profile: "default"
+
+resourceTags:
+  # Configures the ACK service controller to always set key/value pairs tags on
+  # resources that it manages.
+  - services.k8s.aws/controller-version=%CONTROLLER_SERVICE%-%CONTROLLER_VERSION%
+  - services.k8s.aws/namespace=%K8S_NAMESPACE%
+  - service=krm
+  - environment=local
+  - made-by=ack
