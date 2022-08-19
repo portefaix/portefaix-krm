@@ -16,14 +16,6 @@ APP = portefaix
 
 BANNER = P O R T E F A I X / K R M
 
-# ENVS = $(shell ls *.*.mk | awk -F"." '{ print $$2 }')
-
-KUBE_CONTEXT = $(KUBE_CONTEXT_$(ENV))
-KUBE_CURRENT_CONTEXT = $(shell kubectl config current-context)
-CLUSTER = $(CLUSTER_$(ENV))
-
-KIND_CLUSTER_NAME = $(KIND_CLUSTER_NAME_$(ENV))
-
 CONFIG_HOME = $(or ${XDG_CONFIG_HOME},${XDG_CONFIG_HOME},${HOME}/.config)
 
 DEBUG ?=
