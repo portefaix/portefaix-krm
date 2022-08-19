@@ -32,6 +32,8 @@ AZURE_SUBSCRIPTION_ID=$1
 [ -z "${AZURE_SUBSCRIPTION_ID}" ] && echo_fail "Azure subscription not satisfied" && exit 1
 AZURE_PROJECT_NAME=$2
 [ -z "${AZURE_PROJECT_NAME}" ] && echo_fail "Azure project not satisfied" && exit 1
+SECRET_NAME=$3
+NAMESPACE=$4
 
 # az ad sp create-for-rbac --sdk-auth --role Owner > ${AZURE_PROJECT_NAME}.json
 
@@ -61,8 +63,8 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
-  name: crossplane-azure-credentials
-  namespace: crossplane-system
+  name: ${SECRET_NAME}
+  namespace: ${NAMESPACE}
 type: Opaque
 data:
   credentials: ${AZURE_CREDS_ENCODED}

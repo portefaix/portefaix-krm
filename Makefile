@@ -17,6 +17,10 @@ include hack/commons.mk
 
 KIND_VERSION := $(shell kind --version 2>/dev/null)
 
+KUBE_CONTEXT = $(KUBE_CONTEXT_$(ENV))
+KUBE_CURRENT_CONTEXT = $(shell kubectl config current-context)
+CLUSTER = $(CLUSTER_$(ENV))
+
 HELM_CROSSPLANE_VERSION=1.4.1
 
 KIND_VERSION = v0.14.0
@@ -30,6 +34,9 @@ ACK_ECR_VERSION = v0.1.5
 ACK_EKS_VERSION = v0.1.5
 ACK_IAM_VERSION = v0.0.19
 ACK_S3_VERSION = v0.1.4
+
+ASO_SYSTEM_NAMESPACE = azureserviceoperator-system
+ASO_VERSION = v2.0.0-beta.2
 
 # ====================================
 # D E V E L O P M E N T
@@ -63,12 +70,12 @@ endif
 
 .PHONY: kind-create
 kind-create: guard-ENV ## Creates a local Kubernetes cluster (ENV=xxx)
-	@echo -e "$(OK_COLOR)[$(APP)] Create Kubernetes cluster ${SERVICE}$(NO_COLOR)"
+	@echo -e "$(OK_COLOR)[$(APP)] Create Kubernetes cluster $(CLUSTER)$(NO_COLOR)"
 	@kind create cluster --name=$(CLUSTER) --config=hack/kind-config.yaml --wait 180s
 
 .PHONY: kind-delete
 kind-delete: guard-ENV ## Delete a local Kubernetes cluster (ENV=xxx)
-	@echo -e "$(OK_COLOR)[$(APP)] Delete Kubernetes cluster ${SERVICE}$(NO_COLOR)"
+	@echo -e "$(OK_COLOR)[$(APP)] Delete Kubernetes cluster $(CLUSTER)$(NO_COLOR)"
 	@kind delete cluster --name=$(CLUSTER)
 
 kubernetes-check-context:
@@ -123,7 +130,7 @@ crossplane-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY 
 
 .PHONY: crossplane-azure-credentials
 crossplane-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NAME ## Generate credentials for Azure
-	@./hack/scripts/azure.sh $(AZURE_SUBSCRIPTION_ID) $(AZURE_PROJECT_NAME)
+	@./hack/scripts/azure.sh $(AZURE_SUBSCRIPTION_ID) $(AZURE_PROJECT_NAME) crossplane-azure-credentials crossplane-system
 
 
 # ====================================
@@ -138,7 +145,7 @@ ack-aws: ## Authentication on the ECR public Helm registry
 
 .PHONY: ack-aws-credentials
 ack-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
-	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) ack-aws-credentials ack-system
+	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) ack-aws-credentials $(ACK_SYSTEM_NAMESPACE)
 
 .PHONY: ack-install
 ack-install: ## Install the ACK controllers
@@ -151,10 +158,10 @@ ack-install: ## Install the ACK controllers
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-eks-controller \
 		oci://public.ecr.aws/aws-controllers-k8s/eks-chart --version=$(ACK_EKS_VERSION) \
 		-f krm/ack/eks-values.yaml
-	helm install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-iam-controller \
+	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-iam-controller \
 		oci://public.ecr.aws/aws-controllers-k8s/iam-chart --version=$(ACK_IAM_VERSION) \
 		-f krm/ack/iam-values.yaml
-	helm install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-s3-controller \
+	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-s3-controller \
 		oci://public.ecr.aws/aws-controllers-k8s/s3-chart --version=$(ACK_S3_VERSION) \
 		-f krm/ack/s3-values.yaml
 
@@ -170,3 +177,32 @@ ack-uninstall: ## Uninstall the ACK controllers
 	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-iam-controller
 	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-s3-controller
 	kubectl delete namespace $(ACK_SYSTEM_NAMESPACE)
+
+.PHONY: aso-azure-credentials
+aso-azure-credentials: guard-AZURE_TENANT_ID guard-AZURE_SUBSCRIPTION_ID ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
+	@./hack/scripts/aso.sh aso-controller-settings $(ASO_SYSTEM_NAMESPACE)
+
+.PHONY: aso-dependencies
+aso-dependencies: ## Install dependencies
+	@helm repo add cert-manager https://charts.jetstack.io
+	@helm repo update
+	@kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.crds.yaml \
+		&& sleep 5
+	@helm upgrade --install --create-namespace --namespace=cert-manager \
+		cert-manager cert-manager/cert-manager --version 1.9.1
+
+.PHONY: aso-install
+aso-install:## Install the ASO controlplane
+	@helm repo add aso2 https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
+	@helm repo update
+	@helm upgrade --install --devel --create-namespace --namespace=$(ASO_SYSTEM_NAMESPACE) azure-service-operator \
+		aso2/azure-service-operator \
+		--version=$(ASO_VERSION) \
+		-f krm/aso/values.yaml
+
+.PHONY: aso-uninstall
+aso-uninstall: ## Uninstall the ACK controllers
+	# @helm uninstall -n $(ASO_SYSTEM_NAMESPACE) azure-service-operator
+	# @kubectl delete namespace $(ASO_SYSTEM_NAMESPACE)
+	@helm uninstall -n cert-manager cert-manager
+	@kubectl delete namespace cert-manager
