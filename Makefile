@@ -25,6 +25,7 @@ CROSSPLANE_NAMESPACE = crossplane-system
 
 ACK_SYSTEM_NAMESPACE = ack-system
 AWS_REGION = us-west-2
+ACK_EC2_VERSION = v0.0.17
 ACK_ECR_VERSION = v0.1.5
 ACK_EKS_VERSION = v0.1.5
 ACK_IAM_VERSION = v0.0.19
@@ -50,12 +51,6 @@ check: check-kubectl check-kustomize check-helm ## Check requirements
 validate: ## Execute git-hooks
 	@poetry run pre-commit run -a
 
-# ====================================
-# K I N D
-# ====================================
-
-##@ Kind
-
 .PHONY: kind-install
 kind-install: ## Install Kind
 ifdef KIND_VERSION
@@ -75,12 +70,6 @@ kind-create: guard-ENV ## Creates a local Kubernetes cluster (ENV=xxx)
 kind-delete: guard-ENV ## Delete a local Kubernetes cluster (ENV=xxx)
 	@echo -e "$(OK_COLOR)[$(APP)] Delete Kubernetes cluster ${SERVICE}$(NO_COLOR)"
 	@kind delete cluster --name=$(CLUSTER)
-
-# ====================================
-# K U B E R N E T E S
-# ====================================
-
-##@ Kubernetes
 
 kubernetes-check-context:
 	@if [[ "$(KUBE_CONTEXT)" != "$(KUBE_CURRENT_CONTEXT)" ]] ; then \
@@ -121,7 +110,7 @@ crossplane-config: guard-CLOUD guard-ACTION ## The Crossplane configuration (CLO
 	@kustomize build krm/$(CLOUD)/config | kubectl $(ACTION) -f -
 
 .PHONY: crossplane-infra
-crossplane-infra: guard-CLOUD guard-ACTION ## The Crossplane provider (CLOUD=xxx ACTION=xxx)
+crossplane-infra: guard-CLOUD guard-ACTION ## Manage the components (CLOUD=xxx ACTION=xxx)
 	@kustomize build krm/$(CLOUD)/infra | kubectl $(ACTION) -f -
 
 .PHONY: crossplane-gcp-credentials
@@ -141,6 +130,8 @@ crossplane-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NA
 # ACK
 # ====================================
 
+##@ ACK
+
 .PHONY: ack-aws
 ack-aws: ## Authentication on the ECR public Helm registry
 	aws ecr-public get-login-password --region us-east-1 | helm registry login --username AWS --password-stdin public.ecr.aws
@@ -149,8 +140,11 @@ ack-aws: ## Authentication on the ECR public Helm registry
 ack-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
 	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) ack-aws-credentials ack-system
 
-.PHONY: ack-controlplane
-ack-controlplane: ## Install the ACK controllers
+.PHONY: ack-install
+ack-install: ## Install the ACK controllers
+	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-ec2-controller \
+		oci://public.ecr.aws/aws-controllers-k8s/ec2-chart --version=$(ACK_ECR_VERSION) \
+		-f krm/ack/ec2-values.yaml
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-ecr-controller \
 		oci://public.ecr.aws/aws-controllers-k8s/ecr-chart --version=$(ACK_ECR_VERSION) \
 		-f krm/ack/ecr-values.yaml
@@ -163,3 +157,16 @@ ack-controlplane: ## Install the ACK controllers
 	helm install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-s3-controller \
 		oci://public.ecr.aws/aws-controllers-k8s/s3-chart --version=$(ACK_S3_VERSION) \
 		-f krm/ack/s3-values.yaml
+
+.PHONY: ack-infra
+ack-infra: guard-ACTION ## Manage the components (ACTION=xxx, apply or delete)
+	@kustomize build krm/ack/infra | kubectl $(ACTION) -f -
+
+.PHONY: ack-uninstall
+ack-uninstall: ## Uninstall the ACK controllers
+	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-ec2-controller
+	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-ecr-controller
+	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-eks-controller
+	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-iam-controller
+	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-s3-controller
+	kubectl delete namespace $(ACK_SYSTEM_NAMESPACE)
