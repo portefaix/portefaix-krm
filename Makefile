@@ -200,6 +200,10 @@ aso-install:## Install the ASO controlplane
 		--version=$(ASO_VERSION) \
 		-f krm/aso/values.yaml
 
+.PHONY: aso-infra
+aso-infra: guard-ACTION ## Manage the components (ACTION=xxx, apply or delete)
+	@kustomize build krm/aso/infra | kubectl $(ACTION) -f -
+
 .PHONY: aso-uninstall
 aso-uninstall: ## Uninstall the ACK controllers
 	# @helm uninstall -n $(ASO_SYSTEM_NAMESPACE) azure-service-operator
