@@ -23,6 +23,21 @@
 * Install ACK controllers:
 
 ```shell
-> make ack-controlplane
+> make ack-install
 ```
 
+* Check controllers:
+
+```shell
+> kubectl -n ack-system get pods -l "app.kubernetes.io/instance=ack-ec2-controller"
+> kubectl -n ack-system get pods -l "app.kubernetes.io/instance=ack-ecr-controller"
+> kubectl -n ack-system get pods -l "app.kubernetes.io/instance=ack-eks-controller"
+> kubectl -n ack-system get pods -l "app.kubernetes.io/instance=ack-iam-controller"
+> kubectl -n ack-system get pods -l "app.kubernetes.io/instance=ack-s3-controller"
+```
+
+* Clean cluster:
+
+```shell
+> make ack-uninstall
+```
