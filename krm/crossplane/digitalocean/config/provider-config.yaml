@@ -13,14 +13,14 @@
 # limitations under the License.
 
 ---
-apiVersion: do.crossplane.io/v1beta1
+apiVersion: do.crossplane.io/v1alpha1
 kind: ProviderConfig
 metadata:
-  name: crossplane-do
+  name: crossplane-digitalocean
 spec:
   credentials:
     source: Secret
     secretRef:
       namespace: crossplane-system
-      name: crossplane-do-credentials
+      name: crossplane-digitalocean-credentials
       key: token
