@@ -19,8 +19,13 @@ metadata:
   name: portefaix-krm
 spec:
   name: portefaix-krm
-  instances: 1
-  size: g3.k3s.small
+  pools:
+    - id: core
+      count: 2
+      size: g3.k3s.medium
+    - id: ops
+      count: 1
+      size: g3.k3s.small
   # applications:
   #   - "argo-cd"
   #   - "prometheus-operator"
