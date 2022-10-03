@@ -17,7 +17,7 @@
 * AWS
 
 ```shell
-> make crossplane-aws-credentials AWS_ACCESS_KEY=xxxxxx AWS_SECRET_KEY=xxxxxxxxx
+> make crossplane-aws-credentials
 ```
 
 * GCP
@@ -32,6 +32,12 @@
 > make crossplane-azure-credentials AZURE_SUBSCRIPTION_ID=xxxxxxx AZURE_PROJECT_NAME=xxxxxx
 ```
 
+* Scaleway
+
+```shell
+> make crossplane-scaleway-credentials
+```
+
 ## Crossplane Cloud Provider configuration
 
 * Choose the cloud provider (`aws`, `gcp` or `azure`)
@@ -44,6 +50,12 @@
 
 ```shell
 > make crossplane-provider CLOUD=${CROSSPLANE_CLOUD_PROVIDER} ACTION=apply
+```
+
+For Scaleway, execute also:
+
+```shell
+> kustomize build krm/crossplane/scaleway/crds | kubectl apply --server-side=true -f -
 ```
 
 * Setup Crossplane configuration:

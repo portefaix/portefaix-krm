@@ -26,34 +26,28 @@ function echo_fail { echo -e "${color_red}✖ $*${reset_color}"; }
 function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
 function echo_info { echo -e "${color_blue}$*${reset_color}"; }
 
-echo_info "[AWS] Configure AWS provider"
-# aws_profile=default
-# # $(echo -e "[default]\naws_access_key_id = $(aws configure get aws_access_key_id --profile $aws_profile)\naws_secret_access_key = $(aws configure get aws_secret_access_key --profile $aws_profile)" | base64  | tr -d "\n")
-# AWS_CREDS_ENCODED=$(cat <<EOF | base64 | tr -d "\n"
-# [default]
-# aws_access_key_id = $(aws configure get aws_access_key_id --profile ${aws_profile})
-# aws_secret_access_key = $(aws configure get aws_secret_access_key --profile ${aws_profile})
-# EOF
-# )
+echo_info "[Scaleway] Configure Scaleway provider"
 
-[ -z "${AWS_ACCESS_KEY_ID}" ] && echo_fail "Environment variable AWS_ACCESS_KEY_ID not satisfied" && exit 1
-[ -z "${AWS_SECRET_ACCESS_KEY}" ] && echo_fail "Environment variable AWS_SECRET_ACCESS_KEY not satisfied" && exit 1
+[ -z "${SCW_ACCESS_KEY}" ] && echo_fail "Environment variable SCW_ACCESS_KEY not satisfied" && exit 1
+[ -z "${SCW_SECRET_KEY}" ] && echo_fail "Environment variable SCW_SECRET_KEY not satisfied" && exit 1
+[ -z "${SCW_DEFAULT_PROJECT_ID}" ] && echo_fail "Environment variable SCW_DEFAULT_PROJECT_ID not satisfied" && exit 1
+[ -z "${SCW_REGION}" ] && echo_fail "Environment variable SCW_REGION not satisfied" && exit 1
+[ -z "${SCW_ZONE}" ] && echo_fail "Environment variable SCW_ZONE not satisfied" && exit 1
 SECRET_NAME=$1
 NAMESPACE=$2
 
-AWS_CREDS_ENCODED=$(cat <<EOF | base64 | tr -d "\n"
-[default]
-aws_access_key_id = ${AWS_ACCESS_KEY_ID}
-aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+SCw_CREDS_ENCODED=$(cat <<EOF | base64 | tr -d "\n"
+{
+    "access_key": "${SCW_ACCESS_KEY}",
+    "secret_key": "${SCW_SECRET_KEY}",
+    "project_id": "${SCW_DEFAULT_PROJECT_ID}",
+    "region": "${SCW_REGION}",
+    "zone": "${SCW_ZONE}"
+}
 EOF
 )
 
-if [[ -z "${AWS_CREDS_ENCODED}" ]]; then
-  echo_fail "error reading AWS credentials"
-  exit 1
-fi
-
-echo_info "[Kubernetes] AWS: Create secret ${SECRET_NAME} into ${NAMESPACE}"
+echo_info "[Kubernetes] Scaleway: Create secret ${SECRET_NAME} into ${NAMESPACE}"
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
@@ -62,5 +56,5 @@ metadata:
   namespace: ${NAMESPACE}
 type: Opaque
 data:
-  credentials: ${AWS_CREDS_ENCODED}
+  credentials: ${SCw_CREDS_ENCODED}
 EOF

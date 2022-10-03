@@ -21,7 +21,7 @@ KUBE_CONTEXT = $(KUBE_CONTEXT_$(ENV))
 KUBE_CURRENT_CONTEXT = $(shell kubectl config current-context)
 CLUSTER = $(CLUSTER_$(ENV))
 
-HELM_CROSSPLANE_VERSION=1.4.1
+HELM_CROSSPLANE_VERSION=1.9.1
 
 KIND_VERSION = v0.16.0
 
@@ -106,31 +106,35 @@ kubernetes-credentials: guard-ENV guard-CLOUD ## Generate credentials (CLOUD=xxx
 crossplane-controlplane: ## Install Crossplane using Helm
 	@helm repo add crossplane-stable https://charts.crossplane.io/stable
 	@helm repo update
-	@helm install crossplane --create-namespace --namespace $(CROSSPLANE_NAMESPACE) crossplane-stable/crossplane --version $(HELM_CROSSPLANE_VERSION)
+	@helm upgrade --install crossplane --create-namespace --namespace $(CROSSPLANE_NAMESPACE) crossplane-stable/crossplane --version $(HELM_CROSSPLANE_VERSION)
 
 .PHONY: crossplane-provider
 crossplane-provider: guard-CLOUD guard-ACTION ## Setup the Crossplane provider (CLOUD=xxx ACTION=xxx)
-	@kustomize build krm/$(CLOUD)/provider | kubectl $(ACTION) -f -
+	@kustomize build krm/crossplane/$(CLOUD)/provider | kubectl $(ACTION) -f -
 
 .PHONY: crossplane-config
 crossplane-config: guard-CLOUD guard-ACTION ## The Crossplane configuration (CLOUD=xxx ACTION=xxx)
-	@kustomize build krm/$(CLOUD)/config | kubectl $(ACTION) -f -
+	@kustomize build krm/crossplane/$(CLOUD)/config | kubectl $(ACTION) -f -
 
 .PHONY: crossplane-infra
 crossplane-infra: guard-CLOUD guard-ACTION ## Manage the components (CLOUD=xxx ACTION=xxx)
-	@kustomize build krm/$(CLOUD)/infra | kubectl $(ACTION) -f -
+	@kustomize build krm/crossplane/$(CLOUD)/infra | kubectl $(ACTION) -f -
 
 .PHONY: crossplane-gcp-credentials
 crossplane-gcp-credentials: guard-GCP_PROJECT_ID guard-GCP_SERVICE_ACCOUNT_NAME ## Generate credentials for GCP (GCP_PROJECT_ID=xxx GCP_SERVICE_ACCOUNT_NAME=xxx GCP_SERVICE_ACCOUNT_KEYFILE=xxx)
 	@./hack/scripts/gcp.sh $(GCP_PROJECT_ID) $(GCP_SERVICE_ACCOUNT_NAME)
 
 .PHONY: crossplane-aws-credentials
-crossplane-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
-	@./hack/scripts/aws.sh $(AWS_ACCESS_KEY_ID) $(AWS_SECRET_ACCESS_KEY) crossplane-aws-credentials crossplane-system
+crossplane-aws-credentials: ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
+	@./hack/scripts/aws.sh crossplane-aws-credentials crossplane-system
 
 .PHONY: crossplane-azure-credentials
 crossplane-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NAME ## Generate credentials for Azure
 	@./hack/scripts/azure.sh $(AZURE_SUBSCRIPTION_ID) $(AZURE_PROJECT_NAME) crossplane-azure-credentials crossplane-system
+
+.PHONY: crossplane-scaleway-credentials
+crossplane-scaleway-credentials: ## Generate credentials for Azure
+	@./hack/scripts/scaleway.sh crossplane-scaleway-credentials crossplane-system
 
 
 # ====================================

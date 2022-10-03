@@ -1,0 +1,59 @@
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/account.scaleway.jet.crossplane.io_sshkeys.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/applesilicon.scaleway.jet.crossplane.io_servers.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/domain.scaleway.jet.crossplane.io_records.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/domain.scaleway.jet.crossplane.io_zones.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/elasticmetal.scaleway.jet.crossplane.io_servers.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_ipreversedns.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_ips.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_placementgroups.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_privatenics.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_securitygrouprules.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_securitygroups.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_servers.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_snapshots.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/instance.scaleway.jet.crossplane.io_volumes.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/iot.scaleway.jet.crossplane.io_devices.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/iot.scaleway.jet.crossplane.io_hubs.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/iot.scaleway.jet.crossplane.io_networks.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/iot.scaleway.jet.crossplane.io_routes.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/k8s.scaleway.jet.crossplane.io_clusters.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/k8s.scaleway.jet.crossplane.io_pools.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/lb.scaleway.jet.crossplane.io_backends.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/lb.scaleway.jet.crossplane.io_certificates.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/lb.scaleway.jet.crossplane.io_frontends.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/lb.scaleway.jet.crossplane.io_ips.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/lb.scaleway.jet.crossplane.io_lbs.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/lb.scaleway.jet.crossplane.io_routes.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/object.scaleway.jet.crossplane.io_buckets.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/rdb.scaleway.jet.crossplane.io_acls.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/rdb.scaleway.jet.crossplane.io_databases.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/rdb.scaleway.jet.crossplane.io_instances.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/rdb.scaleway.jet.crossplane.io_privileges.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/rdb.scaleway.jet.crossplane.io_users.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/registry.scaleway.jet.crossplane.io_namespaces.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/scaleway.jet.crossplane.io_providerconfigs.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/scaleway.jet.crossplane.io_providerconfigusages.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/vpc.scaleway.jet.crossplane.io_gatewaydhcps.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/vpc.scaleway.jet.crossplane.io_gatewayips.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/vpc.scaleway.jet.crossplane.io_gatewaynetworks.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/vpc.scaleway.jet.crossplane.io_gatewaypatrules.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/vpc.scaleway.jet.crossplane.io_privatenetworks.yaml
+- https://raw.githubusercontent.com/remyleone/crossplane-scaleway-provider/main/package/crds/vpc.scaleway.jet.crossplane.io_publicgateways.yaml
