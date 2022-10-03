@@ -13,19 +13,10 @@
 # limitations under the License.
 
 ---
-kind: CivoKubernetes
-apiVersion: cluster.civo.crossplane.io/v1alpha1
-metadata: 
-  name: portefaix-krm-civo
-spec:
-  name: portefaix-krm-civo
-  instances: 1
-  size: g3.k3s.small
-  applications: 
-    - "argo-cd"
-    - "prometheus-operator"
-  connectionDetails:
-    connectionSecretNamePrefix: portefaix-krm-gcp-k8s
-    connectionSecretNamespace: crossplane-system
-  providerConfigRef:
-    name: crossplane-civo
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: crossplane-system
+transformers:
+- labels.yaml
+resources:
+- ./kubernetes.yaml
