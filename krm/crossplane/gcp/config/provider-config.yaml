@@ -25,3 +25,10 @@ spec:
       namespace: crossplane-system
       name: crossplane-gcp-credentials
       key: credentials
+  # identity:
+  #   type: GoogleApplicationCredentials
+  #   source: Secret
+  #   secretRef:
+  #     name: crossplane-gcp-credentials
+  #     namespace: crossplane-system
+  #     key: credentials.json
