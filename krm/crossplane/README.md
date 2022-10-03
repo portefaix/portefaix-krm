@@ -14,42 +14,30 @@
 
 ## Cloud provider credentials
 
-* AWS
+* Choose the cloud provider (`aws`, `gcp` or `azure`)
 
 ```shell
-> make crossplane-aws-credentials
+> export CLOUD=xxx
 ```
 
-* GCP
+* Setup credentials
 
 ```shell
-> make crossplane-gcp-credentials GCP_PROJECT_ID=myproject-prod GCP_SERVICE_ACCOUNT_NAME=kubernetes-krm
+> make crossplane-credentials
 ```
 
-* Azure
+For Azure:
 
 ```shell
 > make crossplane-azure-credentials AZURE_SUBSCRIPTION_ID=xxxxxxx AZURE_PROJECT_NAME=xxxxxx
 ```
 
-* Scaleway
-
-```shell
-> make crossplane-scaleway-credentials
-```
-
 ## Crossplane Cloud Provider configuration
-
-* Choose the cloud provider (`aws`, `gcp` or `azure`)
-
-```shell
-> export CROSSPLANE_CLOUD_PROVIDER=xxx
-```
 
 * Install Crossplane provider:
 
 ```shell
-> make crossplane-provider CLOUD=${CROSSPLANE_CLOUD_PROVIDER} ACTION=apply
+> make crossplane-provider ACTION=apply
 ```
 
 For Scaleway, execute also:
@@ -61,11 +49,17 @@ For Scaleway, execute also:
 * Setup Crossplane configuration:
 
 ```shell
-❯ make crossplane-config CLOUD=${CROSSPLANE_CLOUD_PROVIDER} ACTION=apply
+❯ make crossplane-config ACTION=apply
 ```
 
 * Deploy infrastructure:
 
 ```shell
-❯ make crossplane-infra CLOUD=${CROSSPLANE_CLOUD_PROVIDER} ACTION=apply
+❯ make crossplane-infra ACTION=apply
+```
+
+* Delete infrastructure:
+
+```shell
+❯ make crossplane-infra ACTION=delete
 ```

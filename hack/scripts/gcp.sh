@@ -28,10 +28,10 @@ function echo_info { echo -e "${color_blue}$*${reset_color}"; }
 
 echo_info "[GCP] Configure GCP provider"
 
-GCP_PROJECT_ID=$1
-[ -z "${GCP_PROJECT_ID}" ] && echo_fail "GCP project not satisfied" && exit 1
-GCP_SERVICE_ACCOUNT_NAME=$2
-[ -z "${GCP_SERVICE_ACCOUNT_NAME}" ] && echo_fail "GCP srvice account name not satisfied" && exit 1
+[ -z "${GCP_PROJECT_ID}" ] && echo_fail "Environment variable GCP_PROJECT_ID not satisfied" && exit 1
+[ -z "${GCP_SERVICE_ACCOUNT_NAME}" ] && echo_fail "Environment variable GCP_SERVICE_ACCOUNT_NAME not satisfied" && exit 1
+SECRET_NAME=$1
+NAMESPACE=$2
 
 echo_info "[GCP] Project: ${GCP_PROJECT_ID} Service Account name: ${GCP_SERVICE_ACCOUNT_NAME}"
 
@@ -95,8 +95,8 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
-  name: crossplane-gcp-credentials
-  namespace: crossplane-system
+  name: ${SECRET_NAME}
+  namespace: ${NAMESPACE}
 type: Opaque
 data:
   credentials: ${GCP_CREDS_ENCODED}

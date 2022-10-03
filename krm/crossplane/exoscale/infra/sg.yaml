@@ -1,0 +1,73 @@
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+apiVersion: securitygroup.exoscale.jet.crossplane.io/v1alpha1
+kind: SecurityGroup
+metadata:
+  name: portefaix-krm-sks
+spec:
+  forProvider:
+    name: portefaix-krm-sks
+    description: "SKS cluster"
+  providerConfigRef:
+    name: crossplane-exoscale
+---
+apiVersion: securitygrouprule.exoscale.jet.crossplane.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: portefaix-krm-sks-calico
+spec:
+  forProvider:
+    description: "Calico"
+    securityGroup: "sks"
+    type: "INGRESS"
+    protocol: "UDP"
+    startPort: 4789
+    endPort: 4789
+    userSecurityGroup: "portefaix-krm-sks"
+  providerConfigRef:
+    name: crossplane-exoscale
+---
+apiVersion: securitygrouprule.exoscale.jet.crossplane.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: portefaix-krm-sks-kubelet
+spec:
+  forProvider:
+    description: "Kubelet"
+    securityGroup: "portefaix-krm-sks"
+    type: "INGRESS"
+    protocol: "TCP"
+    startPort: 10250
+    endPort: 10250
+    userSecurityGroup: "sks"
+  providerConfigRef:
+    name: crossplane-exoscale
+---
+apiVersion: securitygrouprule.exoscale.jet.crossplane.io/v1alpha1
+kind: SecurityGroupRule
+metadata:
+  name: portefaix-krm-sks-nodeport
+spec:
+  forProvider:
+    description: "SKS Node ports"
+    securityGroup: "portefaix-krm-sks"
+    type: "INGRESS"
+    protocol: "TCP"
+    startPort: 30000
+    endPort: 32767
+    cidr: "0.0.0.0/0"
+  providerConfigRef:
+    name: crossplane-exoscale
