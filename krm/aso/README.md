@@ -9,11 +9,11 @@
 ### Controlplane
 
 ```shell
-make aso-dependencies
+> make aso-dependencies
 ```
 
 ```shell
-make aso-install
+> make aso-install
 ```
 
 ```shell
@@ -23,5 +23,5 @@ make aso-install
 ### Clean
 
 ```shell
-make aso-uninstall
+> make aso-uninstall
 ```
