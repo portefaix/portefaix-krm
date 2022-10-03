@@ -19,5 +19,5 @@ namespace: crossplane-system
 transformers:
 - labels.yaml
 resources:
-- ./containerregistry.yaml
 - ./kubernetes.yaml
+# - ./containerregistry.yaml

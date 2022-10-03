@@ -18,11 +18,11 @@ kind: LabelTransformer
 metadata:
   name: labels
 labels:
-  app.kubernetes.io/name: portefaix-krm
-  app.kubernetes.io/instance: portefaix-krm-app
+  app.kubernetes.io/name: portefaix-krm-do
+  app.kubernetes.io/instance: portefaix-krm-do-app
   app.kubernetes.io/component: krm-crossplane
   app.kubernetes.io/version: v0.1.0
-  app.kubernetes.io/part-of: portefaix-krm
+  app.kubernetes.io/part-of: portefaix-krm-do
   app.kubernetes.io/managed-by: kustomize
   crossplane.io/version: v1.9.1
   crossplane.io/provider: do-v0.1.0
