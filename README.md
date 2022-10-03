@@ -15,7 +15,7 @@ Tools:
 
 ## Documentation
 
-* [Crossplane](./krm/crossplane/aws)
+* [Crossplane](./krm/crossplane)
 * [AWS Controllers for Kubernetes](./krm/ack/)
 * [Azure Service Operator](./krm/aso/)
 
