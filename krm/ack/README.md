@@ -1,4 +1,4 @@
-### KRM / ACK
+# KRM / ACK
 
 * Create Kind cluster :
 
@@ -12,13 +12,13 @@
 > make ack-controlplane ENV=aws
 ```
 
-### Cloud provider credentials
+## Cloud provider credentials
 
 ```shell
 > make ack-aws-credentials AWS_ACCESS_KEY=xxxxxx AWS_SECRET_KEY=xxxxxxxxx
 ```
 
-### ACK Control Plane
+## ACK Control Plane
 
 * Install ACK controllers:
 

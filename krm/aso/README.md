@@ -1,4 +1,4 @@
-### KRM / Azure Service Operator
+# KRM / Azure Service Operator
 
 * Create Kind cluster :
 
@@ -6,7 +6,7 @@
 > make kind-create ENV=azure
 ```
 
-### Controlplane
+## Controlplane
 
 ```shell
 > make aso-dependencies
@@ -20,7 +20,7 @@
 > make aso-azure-credentials
 ```
 
-### Clean
+## Clean
 
 ```shell
 > make aso-uninstall
