@@ -15,12 +15,7 @@ Tools:
 
 ## Documentation
 
-* [Crossplane AWS](./krm/crossplane/aws)
-* [Crossplane Azure](./krm/crossplane/azure/)
-* [Crossplane GCP](./krm/crossplane/gcp)
-* [Crossplane DigitalOcean](./krm/crossplane/digitalocean/)
-* [Crossplane Civo](./krm/crossplane/civo/)
-* [Crossplane Alibaba](./krm/crossplane/alibaba/)
+* [Crossplane](./krm/crossplane/aws)
 * [AWS Controllers for Kubernetes](./krm/ack/)
 * [Azure Service Operator](./krm/aso/)
 
