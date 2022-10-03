@@ -19,6 +19,5 @@ metadata:
   name: crossplane-civo
 spec:
   package: crossplane/provider-civo-amd64:main
-  # package: crossplane/provider-civo-arm64:main
   controllerConfigRef:
     name: crossplane-civo
