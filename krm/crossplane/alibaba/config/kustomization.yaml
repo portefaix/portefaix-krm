@@ -19,4 +19,4 @@ namespace: crossplane-system
 transformers:
 - labels.yaml
 resources:
-- ./config.yaml
+- ./provider-config.yaml
