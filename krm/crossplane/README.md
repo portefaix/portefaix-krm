@@ -1,4 +1,4 @@
-### KRM / Crossplane
+# KRM / Crossplane
 
 * Create Kind cluster :
 
@@ -12,7 +12,7 @@
 > make crossplane-controlplane ENV=crossplane
 ```
 
-### Cloud provider credentials
+## Cloud provider credentials
 
 * AWS
 
@@ -32,7 +32,7 @@
 > make crossplane-azure-credentials AZURE_SUBSCRIPTION_ID=xxxxxxx AZURE_PROJECT_NAME=xxxxxx
 ```
 
-### Crossplane Cloud Provider configuration
+## Crossplane Cloud Provider configuration
 
 * Choose the cloud provider (`aws`, `gcp` or `azure`)
 

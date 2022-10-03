@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-# Copyright (C) 2021 Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ color_red="\\e[31m"
 color_green="\\e[32m"
 color_blue="\\e[36m";
 
-declare -r this_dir=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
-declare -r root_dir=$(cd ${this_dir}/../.. && pwd)
+# declare -r this_dir=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
+# declare -r root_dir=$(cd ${this_dir}/../.. && pwd)
 
 function echo_fail { echo -e "${color_red}✖ $*${reset_color}"; }
 function echo_success { echo -e "${color_green}✔ $*${reset_color}"; }
@@ -35,55 +35,55 @@ GCP_SERVICE_ACCOUNT_NAME=$2
 
 echo_info "[GCP] Project: ${GCP_PROJECT_ID} Service Account name: ${GCP_SERVICE_ACCOUNT_NAME}"
 
-gcloud iam service-accounts create ${GCP_SERVICE_ACCOUNT_NAME} \
-		--project ${GCP_PROJECT_ID} --display-name ${GCP_SERVICE_ACCOUNT_NAME} \
+gcloud iam service-accounts create "${GCP_SERVICE_ACCOUNT_NAME}" \
+		--project "${GCP_PROJECT_ID}" --display-name "${GCP_SERVICE_ACCOUNT_NAME}" \
 		--description "Created by GCloud"
 
 GCP_SERVICE_ACCOUNT_EMAIL="${GCP_SERVICE_ACCOUNT_NAME}@${GCP_PROJECT_ID}.iam.gserviceaccount.com"
 GCP_SERVICE_ACCOUNT_KEYFILE=${GCP_PROJECT_ID}.json
 
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-    --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/storage.admin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-    --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/storage.objectAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-    --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/storage.objectViewer"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-    --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/compute.instanceAdmin.v1"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-    --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/compute.securityAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-    --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/compute.networkAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-    --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/resourcemanager.projectIamAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/iam.serviceAccountAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/iam.serviceAccountUser"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/iam.roleAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/iam.serviceAccountKeyAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/container.clusterAdmin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/container.admin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/secretmanager.admin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/cloudkms.admin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/cloudkms.cryptoKeyEncrypterDecrypter"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/dns.admin"
-gcloud projects add-iam-policy-binding ${GCP_PROJECT_ID} \
-  --member serviceAccount:${GCP_SERVICE_ACCOUNT_EMAIL} --role="roles/iap.admin"
-gcloud iam service-accounts keys create ./${GCP_SERVICE_ACCOUNT_KEYFILE} \
-		--project ${GCP_PROJECT_ID} \
-		--iam-account ${GCP_SERVICE_ACCOUNT_EMAIL}
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/storage.admin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/storage.objectAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/storage.objectViewer"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/compute.instanceAdmin.v1"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/compute.securityAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/compute.networkAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+    --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/resourcemanager.projectIamAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/iam.serviceAccountAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/iam.serviceAccountUser"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/iam.roleAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/iam.serviceAccountKeyAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/container.clusterAdmin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/container.admin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/secretmanager.admin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/cloudkms.admin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/cloudkms.cryptoKeyEncrypterDecrypter"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/dns.admin"
+gcloud projects add-iam-policy-binding "${GCP_PROJECT_ID}" \
+  --member serviceAccount:"${GCP_SERVICE_ACCOUNT_EMAIL}" --role="roles/iap.admin"
+gcloud iam service-accounts keys create "./${GCP_SERVICE_ACCOUNT_KEYFILE}" \
+		--project "${GCP_PROJECT_ID}" \
+		--iam-account "${GCP_SERVICE_ACCOUNT_EMAIL}"
 
 # base64 encode the GCP credentials
-GCP_CREDS_ENCODED=$(base64 ${GCP_SERVICE_ACCOUNT_KEYFILE} | tr -d "\n")
+GCP_CREDS_ENCODED=$(base64 "${GCP_SERVICE_ACCOUNT_KEYFILE}" | tr -d "\n")
 
 if [[ -z "${GCP_CREDS_ENCODED}" ]]; then
   echo_fail "error reading GCP credentials"
