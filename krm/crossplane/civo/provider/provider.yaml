@@ -13,19 +13,12 @@
 # limitations under the License.
 
 ---
-apiVersion: builtin
-kind: LabelTransformer
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
 metadata:
-  name: labels
-labels:
-  app.kubernetes.io/name: portefaix-krm
-  app.kubernetes.io/instance: portefaix-krm-app
-  app.kubernetes.io/component: krm-crossplane
-  app.kubernetes.io/version: v0.1.0
-  app.kubernetes.io/part-of: portefaix-krm
-  app.kubernetes.io/managed-by: kustomize
-  crossplane.io/version: v1.9.1
-  crossplane.io/provider: azure-v0.17.0
-fieldSpecs:
-- path: metadata/labels
-  create: true
+  name: crossplane-civo
+spec:
+  package: crossplane/provider-civo-amd64:main
+  # package: crossplane/provider-civo-arm64:main
+  controllerConfigRef:
+    name: crossplane-civo

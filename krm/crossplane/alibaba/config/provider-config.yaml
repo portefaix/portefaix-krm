@@ -13,19 +13,15 @@
 # limitations under the License.
 
 ---
-apiVersion: builtin
-kind: LabelTransformer
+apiVersion: alibaba.crossplane.io/v1beta1
+kind: ProviderConfig
 metadata:
-  name: labels
-labels:
-  app.kubernetes.io/name: portefaix-krm
-  app.kubernetes.io/instance: portefaix-krm-app
-  app.kubernetes.io/component: krm-crossplane
-  app.kubernetes.io/version: v0.1.0
-  app.kubernetes.io/part-of: portefaix-krm
-  app.kubernetes.io/managed-by: kustomize
-  crossplane.io/version: v1.9.1
-  crossplane.io/provider: azure-v0.17.0
-fieldSpecs:
-- path: metadata/labels
-  create: true
+  name: crossplane-alibaba
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: crossplane-alibaba-credentials
+      key: credentials
+  region: cn-beijing
