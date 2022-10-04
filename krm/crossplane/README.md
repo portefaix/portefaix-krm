@@ -26,12 +26,6 @@
 ❯ make crossplane-credentials
 ```
 
-For Azure:
-
-```shell
-❯ make crossplane-azure-credentials AZURE_SUBSCRIPTION_ID=xxxxxxx AZURE_PROJECT_NAME=xxxxxx
-```
-
 ## Crossplane Cloud Provider configuration
 
 * Install Crossplane provider:
