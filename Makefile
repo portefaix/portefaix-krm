@@ -124,22 +124,6 @@ crossplane-infra: guard-CLOUD guard-ACTION ## Manage the components (CLOUD=xxx A
 crossplane-credentials: guard-CLOUD ## Generate credentials for a Cloud provider (CLOUD=xxx)
 	@./hack/scripts/$(CLOUD).sh crossplane-$(CLOUD)-credentials crossplane-system
 
-# .PHONY: crossplane-gcp-credentials
-# crossplane-gcp-credentials: guard-GCP_PROJECT_ID guard-GCP_SERVICE_ACCOUNT_NAME ## Generate credentials for GCP (GCP_PROJECT_ID=xxx GCP_SERVICE_ACCOUNT_NAME=xxx GCP_SERVICE_ACCOUNT_KEYFILE=xxx)
-# 	@./hack/scripts/gcp.sh crossplane-gcp-credentials crossplane-system
-
-# .PHONY: crossplane-aws-credentials
-# crossplane-aws-credentials: ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
-# 	@./hack/scripts/aws.sh crossplane-aws-credentials crossplane-system
-
-.PHONY: crossplane-azure-credentials
-crossplane-azure-credentials: guard-AZURE_SUBSCRIPTION_ID guard-AZURE_PROJECT_NAME ## Generate credentials for Azure
-	@./hack/scripts/azure.sh $(AZURE_SUBSCRIPTION_ID) $(AZURE_PROJECT_NAME) crossplane-azure-credentials crossplane-system
-
-# .PHONY: crossplane-scaleway-credentials
-# crossplane-scaleway-credentials: ## Generate credentials for Azure
-# 	@./hack/scripts/scaleway.sh crossplane-scaleway-credentials crossplane-system
-
 
 # ====================================
 # ACK

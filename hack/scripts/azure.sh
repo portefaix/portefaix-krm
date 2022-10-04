@@ -28,31 +28,39 @@ function echo_info { echo -e "${color_blue}$*${reset_color}"; }
 
 echo_info "[Azure] Configure Azure provider"
 
-AZURE_SUBSCRIPTION_ID=$1
 [ -z "${AZURE_SUBSCRIPTION_ID}" ] && echo_fail "Azure subscription not satisfied" && exit 1
-AZURE_PROJECT_NAME=$2
-[ -z "${AZURE_PROJECT_NAME}" ] && echo_fail "Azure project not satisfied" && exit 1
-SECRET_NAME=$3
-NAMESPACE=$4
+SECRET_NAME=$1
+NAMESPACE=$2
 
-# az ad sp create-for-rbac --sdk-auth --role Owner > ${AZURE_PROJECT_NAME}.json
+SCOPES="/subscriptions/${AZURE_SUBSCRIPTION_ID}"
 
-AZURE_CLIENT_ID=$(jq -r .clientId < "${AZURE_PROJECT_NAME}.json")
+CREDS_FILE="creds.json"
+
+az ad sp create-for-rbac --role Owner --scopes "${SCOPES}" --sdk-auth -n "crossplane-krm" > ${CREDS_FILE}
+if [ ! -f "${CREDS_FILE}" ]; then
+  echo_fail "Azure configuration file ${CREDS_FILE} not found"
+  exit 1
+fi
+cat ${CREDS_FILE}
+
+AZURE_CLIENT_ID=$(jq -r .clientId < "${CREDS_FILE}")
 echo_info "[Azure] Add permission to client: ${AZURE_CLIENT_ID}"
 
 AZURE_AD_ID="00000002-0000-0000-c000-000000000000"
 
+echo_info "[Azure] Add required Azure Active Directory permissions"
 az ad app permission add --id "${AZURE_CLIENT_ID}" \
    --api "${AZURE_AD_ID}" \
    --api-permissions 1cda74f2-2616-4834-b122-5cb1b07f8a59=Role \
    --api-permissions 78c8a3c8-a07e-4b9e-af1b-b5ccab50a175=Role
 
-az ad app permission grant --id "${AZURE_CLIENT_ID}" --api "${AZURE_AD_ID}" --expires never
+echo_info "[Azure] Grant the permissions"
+az ad app permission grant --id "${AZURE_CLIENT_ID}" --api "${AZURE_AD_ID}" --scope "${SCOPES}"
 
+echo_info "[Azure] Grant admin consent to the service principal"
 az ad app permission admin-consent --id "${AZURE_CLIENT_ID}"
 
-AZURE_CREDS_ENCODED=$(base64 "${AZURE_PROJECT_NAME}.json" | tr -d "\n")
-
+AZURE_CREDS_ENCODED=$(base64 "${CREDS_FILE}" | tr -d "\n")
 if [[ -z "${AZURE_CREDS_ENCODED}" ]]; then
   echo_fail "error reading credentials from Azure CLI output"
   exit 1
@@ -69,3 +77,5 @@ type: Opaque
 data:
   credentials: ${AZURE_CREDS_ENCODED}
 EOF
+
+rm "${CREDS_FILE}"

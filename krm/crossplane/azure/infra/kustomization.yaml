@@ -20,7 +20,7 @@ resources:
 - ./vnet.yaml
 - ./subnet.yaml
 - ./account.yaml
-# - ./container.yaml
+- ./container.yaml
 # - ./mysql.yaml
 # - ./postgresql.yaml
 # - ./redis.yaml

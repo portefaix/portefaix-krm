@@ -32,7 +32,7 @@ spec:
   vnetSubnetIDRef:
     name: portefaix-krm
   location: West Europe
-  version: 1.21.1
+  version: 1.24.0
   nodeCount: 1
   nodeVMSize: Standard_B2s
   dnsNamePrefix: portefaix-krm-aks
