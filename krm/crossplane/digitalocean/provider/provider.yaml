@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
----
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
   name: crossplane-digitalocean
 spec:
+  #datasource=github-tags depName=crossplane/provider-digitalocean
   package: crossplane/provider-digitalocean:v0.1.0
   controllerConfigRef:
     name: crossplane-digitalocean
