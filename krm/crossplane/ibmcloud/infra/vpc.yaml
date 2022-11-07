@@ -13,11 +13,17 @@
 # limitations under the License.
 
 ---
-apiVersion: pkg.crossplane.io/v1
-kind: Provider
+apiVersion: vpcv1.ibmcloud.crossplane.io/v1alpha1
+kind: VPC
 metadata:
-  name: crossplane-ibmcloud
+  name: portefaix-krm
+  annotations:
 spec:
-  package: crossplane/provider-ibm-cloud:v0.6.0
-  controllerConfigRef:
+  deletionPolicy: Delete
+  forProvider:
+    classicAccess: false
+    name: portefaix-krm
+    # resourceGroup:
+    #   id: 80bd19ee87314085bb8ac243e6e010d9
+  providerConfigRef:
     name: crossplane-ibmcloud

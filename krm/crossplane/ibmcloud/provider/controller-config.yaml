@@ -16,7 +16,7 @@
 apiVersion: pkg.crossplane.io/v1alpha1
 kind: ControllerConfig
 metadata:
-  name: crossplane-do
+  name: crossplane-ibmcloud
 spec:
   podSecurityContext:
     fsGroup: 2000

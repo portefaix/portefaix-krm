@@ -1,0 +1,44 @@
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+apiVersion: container.containerv2.ibmcloud.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  name: portefaix-krm
+  annotations:
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    name: portefaix-krm
+    disablePublicServiceEndpoint: true
+    provider: vpc-gen2
+    kubeVersion: 1.21.7_1541
+    podSubnet: 192.160.16.0/20
+    serviceSubnet: 192.160.0.0/20
+    cosInstanceCRN: 'crn:v1:bluemix:public:containers-kubernetes:us-south:a/0b5a00334eaf9eb9339d2ab48f20d7f5:c7jkited0fh21rkqk92g::'
+    defaultWorkerPoolEntitlement: ''
+    workerPool:
+      name: core
+      entitlement: ''
+      flavor: cx2.2x4
+      vpcRef:
+        name: portefaix-krm
+      workerCount: 3
+      zones:
+        - id: us-south-1
+          subnetRef:
+            name: portefaix-krm
+  providerConfigRef:
+    name: crossplane-ibmcloud
