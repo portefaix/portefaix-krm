@@ -38,9 +38,9 @@ ACK_IAM_VERSION = v0.0.19
 # datasource=github-tags depName=github.com/aws-controllers-k8s/s3-controller
 ACK_S3_VERSION = v0.1.4
 
-ASO_SYSTEM_NAMESPACE = azureserviceoperator-system
+ASO_SYSTEM_NAMESPACE = aso-system
 # datasource=github-tags depName=github.com/Azure/azure-service-operator
-ASO_VERSION = v2.0.0-beta.2
+ASO_VERSION = v2.0.0-beta.4
 
 # ====================================
 # D E V E L O P M E N T
@@ -194,7 +194,7 @@ aso-infra: guard-ACTION ## Manage the components (ACTION=xxx, apply or delete)
 
 .PHONY: aso-uninstall
 aso-uninstall: ## Uninstall the ACK controllers
-	# @helm uninstall -n $(ASO_SYSTEM_NAMESPACE) azure-service-operator
-	# @kubectl delete namespace $(ASO_SYSTEM_NAMESPACE)
+	@helm uninstall -n $(ASO_SYSTEM_NAMESPACE) azure-service-operator
+	@kubectl delete namespace $(ASO_SYSTEM_NAMESPACE)
 	@helm uninstall -n cert-manager cert-manager
 	@kubectl delete namespace cert-manager
