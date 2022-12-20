@@ -27,20 +27,20 @@ CROSSPLANE_NAMESPACE = crossplane-system
 
 ACK_SYSTEM_NAMESPACE = ack-system
 AWS_REGION = us-west-2
-# datasource=github-tags depName=github.com/aws-controllers-k8s/ec2-controller
-ACK_EC2_VERSION = v0.0.17
-# datasource=github-tags depName=github.com/aws-controllers-k8s/ecr-controller
-ACK_ECR_VERSION = v0.1.5
-# datasource=github-tags depName=github.com/aws-controllers-k8s/eks-controller
-ACK_EKS_VERSION = v0.1.5
-# datasource=github-tags depName=github.com/aws-controllers-k8s/iam-controller
-ACK_IAM_VERSION = v0.0.19
-# datasource=github-tags depName=github.com/aws-controllers-k8s/s3-controller
-ACK_S3_VERSION = v0.1.4
+# datasource=github-tags depName=aws-controllers-k8s/ec2-controller
+ACK_EC2_VERSION = 0.0.17
+# datasource=github-tags depName=aws-controllers-k8s/ecr-controller
+ACK_ECR_VERSION = 0.1.5
+# datasource=github-tags depName=aws-controllers-k8s/eks-controller
+ACK_EKS_VERSION = 0.1.5
+# datasource=github-tags depName=aws-controllers-k8s/iam-controller
+ACK_IAM_VERSION = 0.0.19
+# datasource=github-tags depName=aws-controllers-k8s/s3-controller
+ACK_S3_VERSION = 0.1.4
 
 ASO_SYSTEM_NAMESPACE = aso-system
-# datasource=github-tags depName=github.com/Azure/azure-service-operator
-ASO_VERSION = v2.0.0-beta.4
+# datasource=github-tags depName=Azure/azure-service-operator
+ASO_VERSION = 2.0.0-beta.4
 
 # ====================================
 # D E V E L O P M E N T
@@ -102,7 +102,7 @@ crossplane-controlplane: ## Install Crossplane using Helm
 	@helm repo update
 	@helm upgrade --install crossplane --create-namespace \
 		--namespace $(CROSSPLANE_NAMESPACE) crossplane-stable/crossplane \
-		--version $(CROSSPLANE_VERSION)
+		--version v$(CROSSPLANE_VERSION)
 
 .PHONY: crossplane-provider
 crossplane-provider: guard-CLOUD guard-ACTION ## Setup the Crossplane provider (CLOUD=xxx ACTION=xxx)
@@ -138,19 +138,19 @@ ack-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY ## Gene
 .PHONY: ack-install
 ack-install: ## Install the ACK controllers
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-ec2-controller \
-		oci://public.ecr.aws/aws-controllers-k8s/ec2-chart --version=$(ACK_ECR_VERSION) \
+		oci://public.ecr.aws/aws-controllers-k8s/ec2-chart --version=v$(ACK_ECR_VERSION) \
 		-f krm/ack/ec2-values.yaml
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-ecr-controller \
-		oci://public.ecr.aws/aws-controllers-k8s/ecr-chart --version=$(ACK_ECR_VERSION) \
+		oci://public.ecr.aws/aws-controllers-k8s/ecr-chart --version=v$(ACK_ECR_VERSION) \
 		-f krm/ack/ecr-values.yaml
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-eks-controller \
-		oci://public.ecr.aws/aws-controllers-k8s/eks-chart --version=$(ACK_EKS_VERSION) \
+		oci://public.ecr.aws/aws-controllers-k8s/eks-chart --version=v$(ACK_EKS_VERSION) \
 		-f krm/ack/eks-values.yaml
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-iam-controller \
-		oci://public.ecr.aws/aws-controllers-k8s/iam-chart --version=$(ACK_IAM_VERSION) \
+		oci://public.ecr.aws/aws-controllers-k8s/iam-chart --version=v$(ACK_IAM_VERSION) \
 		-f krm/ack/iam-values.yaml
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-s3-controller \
-		oci://public.ecr.aws/aws-controllers-k8s/s3-chart --version=$(ACK_S3_VERSION) \
+		oci://public.ecr.aws/aws-controllers-k8s/s3-chart --version=v$(ACK_S3_VERSION) \
 		-f krm/ack/s3-values.yaml
 
 .PHONY: ack-infra
@@ -185,7 +185,7 @@ aso-install:## Install the ASO controlplane
 	@helm repo update
 	@helm upgrade --install --devel --create-namespace --namespace=$(ASO_SYSTEM_NAMESPACE) azure-service-operator \
 		aso2/azure-service-operator \
-		--version=$(ASO_VERSION) \
+		--version=v$(ASO_VERSION) \
 		-f krm/aso/values.yaml
 
 .PHONY: aso-infra
