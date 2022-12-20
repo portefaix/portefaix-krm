@@ -15,6 +15,15 @@
   "rebaseWhen": "conflicted",
   "assignees": ["@nlamirault"],
   "reviewersFromCodeOwners": true,
+  "regexManagers": [
+    {
+      "fileMatch": ["Makefile$"],
+      "matchStrings": [
+        "datasource=(?<datasource>.*)\\sdepName=(?<depName>.*)\\n.*VERSION =\\s(?<currentValue>.*)"
+      ],
+      "datasourceTemplate": "github-tags"
+    },
+  ],
   "packageRules": [
     // Labels for Docker
     {
