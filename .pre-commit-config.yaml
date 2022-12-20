@@ -31,7 +31,7 @@ repos:
     rev: v1.3.1
     hooks:
     -   id: insert-license
-        files: (Makefile|\.yaml|\.yml)
+        files: (Makefile|\.mk|\.yaml|\.yml)
         args:
         - --license-filepath
         - hack/config/licence.txt
