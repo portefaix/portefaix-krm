@@ -17,18 +17,12 @@
 include hack/commons.mk
 -include hack/kind.$(ENV).mk
 
-KIND_VERSION := $(shell kind --version 2>/dev/null)
-
 KUBE_CONTEXT = $(KUBE_CONTEXT_$(ENV))
 KUBE_CURRENT_CONTEXT = $(shell kubectl config current-context)
 CLUSTER = $(CLUSTER_$(ENV))
 
 # datasource=github-tags depName=crossplane/crossplane
-HELM_CROSSPLANE_VERSION=1.9.1
-
-# datasource=github-tags depName=github.com/kubernetes-sigs/kind
-KIND_VERSION = v0.16.0
-
+CROSSPLANE_VERSION = 1.9.1
 CROSSPLANE_NAMESPACE = crossplane-system
 
 ACK_SYSTEM_NAMESPACE = ack-system
@@ -68,16 +62,6 @@ check: check-kubectl check-kustomize check-helm ## Check requirements
 validate: ## Execute git-hooks
 	@poetry run pre-commit run -a
 
-.PHONY: kind-install
-kind-install: ## Install Kind
-ifdef KIND_VERSION
-	@echo "Found version $(KIND_VERSION)"
-else
-	@curl -Lo ./kind https://kind.sigs.k8s.io/dl/$(KIND_VERSION)kind-linux-amd64
-	@chmod +x ./kind
-	@mv ./kind /bin/kind
-endif
-
 .PHONY: kind-create
 kind-create: guard-ENV ## Creates a local Kubernetes cluster (ENV=xxx)
 	@echo -e "$(OK_COLOR)[$(APP)] Create Kubernetes cluster $(CLUSTER)$(NO_COLOR)"
@@ -116,7 +100,9 @@ kubernetes-credentials: guard-ENV guard-CLOUD ## Generate credentials (CLOUD=xxx
 crossplane-controlplane: ## Install Crossplane using Helm
 	@helm repo add crossplane-stable https://charts.crossplane.io/stable
 	@helm repo update
-	@helm upgrade --install crossplane --create-namespace --namespace $(CROSSPLANE_NAMESPACE) crossplane-stable/crossplane --version $(HELM_CROSSPLANE_VERSION)
+	@helm upgrade --install crossplane --create-namespace \
+		--namespace $(CROSSPLANE_NAMESPACE) crossplane-stable/crossplane \
+		--version $(CROSSPLANE_VERSION)
 
 .PHONY: crossplane-provider
 crossplane-provider: guard-CLOUD guard-ACTION ## Setup the Crossplane provider (CLOUD=xxx ACTION=xxx)

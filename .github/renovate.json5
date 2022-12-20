@@ -19,7 +19,7 @@
     {
       "fileMatch": ["Makefile$"],
       "matchStrings": [
-        "datasource=(?<datasource>.*)\\sdepName=(?<depName>.*)\\n.*VERSION =\\s(?<currentValue>.*)"
+        "datasource=(?<datasource>.*)\\sdepName=(?<depName>.*)\\n.*_VERSION\\s=\\s(?<currentValue>.*)"
       ],
       "datasourceTemplate": "github-tags"
     },
