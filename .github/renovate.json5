@@ -15,15 +15,6 @@
   "rebaseWhen": "conflicted",
   "assignees": ["@nlamirault"],
   "reviewersFromCodeOwners": true,
-  // "labels": ["kind/renovate", "lifecycle/active", "status/review_needed"],
-  "regexManagers": [
-    {
-      "fileMatch": [".*yaml$"],
-      "matchStrings": [
-        "datasource=(?<datasource>.*)\\sdepName=(?<depName>.*)\\n.*package: (?<currentValue>.*)"
-      ]
-    }
-  ],
   "packageRules": [
     // Labels for Docker
     {

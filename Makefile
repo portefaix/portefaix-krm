@@ -21,21 +21,29 @@ KUBE_CONTEXT = $(KUBE_CONTEXT_$(ENV))
 KUBE_CURRENT_CONTEXT = $(shell kubectl config current-context)
 CLUSTER = $(CLUSTER_$(ENV))
 
+# datasource=github-tags depName=crossplane/crossplane
 HELM_CROSSPLANE_VERSION=1.9.1
 
+# datasource=github-tags depName=github.com/kubernetes-sigs/kind
 KIND_VERSION = v0.16.0
 
 CROSSPLANE_NAMESPACE = crossplane-system
 
 ACK_SYSTEM_NAMESPACE = ack-system
 AWS_REGION = us-west-2
+# datasource=github-tags depName=github.com/aws-controllers-k8s/ec2-controller
 ACK_EC2_VERSION = v0.0.17
+# datasource=github-tags depName=github.com/aws-controllers-k8s/ecr-controller
 ACK_ECR_VERSION = v0.1.5
+# datasource=github-tags depName=github.com/aws-controllers-k8s/eks-controller
 ACK_EKS_VERSION = v0.1.5
+# datasource=github-tags depName=github.com/aws-controllers-k8s/iam-controller
 ACK_IAM_VERSION = v0.0.19
+# datasource=github-tags depName=github.com/aws-controllers-k8s/s3-controller
 ACK_S3_VERSION = v0.1.4
 
 ASO_SYSTEM_NAMESPACE = azureserviceoperator-system
+# datasource=github-tags depName=github.com/Azure/azure-service-operator
 ASO_VERSION = v2.0.0-beta.2
 
 # ====================================
