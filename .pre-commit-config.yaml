@@ -11,12 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.4.0
     hooks:
     -   id: trailing-whitespace
     -   id: end-of-file-fixer
@@ -26,28 +28,16 @@ repos:
         exclude: mkdocs.yml
     -   id: check-added-large-files
 -   repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.1.10
+    rev: v1.3.1
     hooks:
     -   id: insert-license
-        files: \.yaml
-        args:
-        - --license-filepath
-        - hack/config/licence.txt
-        # - --remove-header
-    -   id: insert-license
-        files: \.yml
-        args:
-        - --license-filepath
-        - hack/config/licence.txt
-        # - --remove-header
-    -   id: insert-license
-        files: \.tf
+        files: (Makefile|\.yaml|\.yml)
         args:
         - --license-filepath
         - hack/config/licence.txt
         # - --remove-header
 - repo: https://github.com/jumanjihouse/pre-commit-hooks
-  rev: 2.1.5
+  rev: 3.0.0
   hooks:
   - id: shellcheck
     exclude: hack/hooks/pre-commit.git-crypt.sh

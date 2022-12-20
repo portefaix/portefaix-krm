@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
 
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
@@ -54,9 +56,9 @@ spec:
     minSize: 1
     maxSize: 3
     desiredSize: 1
-  updateConfig: 
+  updateConfig:
     maxUnavailable: 1
-    maxUnavailablePercentage: 50 
+    maxUnavailablePercentage: 50
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: Nodegroup
@@ -80,9 +82,9 @@ spec:
     minSize: 1
     maxSize: 3
     desiredSize: 1
-  updateConfig: 
-    maxUnavailable: 1 
-    maxUnavailablePercentage: 50 
+  updateConfig:
+    maxUnavailable: 1
+    maxUnavailablePercentage: 50
 ---
 apiVersion: eks.services.k8s.aws/v1alpha1
 kind: FargateProfile
@@ -91,7 +93,7 @@ metadata:
 spec:
   name: portefaix-krm-ack
   clusterName: portefaix-krm-ack-eks-cluster
-  # podExecutionRoleARN: $FARGATE_POD_ROLE 
+  # podExecutionRoleARN: $FARGATE_POD_ROLE
   subnetRefs:
       - name: portefaix-krm-ack-private
   selectors:
