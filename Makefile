@@ -138,7 +138,7 @@ ack-aws-credentials: guard-AWS_ACCESS_KEY_ID guard-AWS_SECRET_ACCESS_KEY ## Gene
 .PHONY: ack-install
 ack-install: ## Install the ACK controllers
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-ec2-controller \
-		oci://public.ecr.aws/aws-controllers-k8s/ec2-chart --version=v$(ACK_ECR_VERSION) \
+		oci://public.ecr.aws/aws-controllers-k8s/ec2-chart --version=v$(ACK_EC2_VERSION) \
 		-f krm/ack/ec2-values.yaml
 	helm upgrade --install --create-namespace --namespace $(ACK_SYSTEM_NAMESPACE) ack-ecr-controller \
 		oci://public.ecr.aws/aws-controllers-k8s/ecr-chart --version=v$(ACK_ECR_VERSION) \
