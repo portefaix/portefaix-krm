@@ -31,10 +31,10 @@ repos:
     rev: v1.3.1
     hooks:
     -   id: insert-license
-        files: (Makefile|\.mk|\.yaml|\.yml)
+        files: (Makefile|\.mk|Dockerfile|\.yaml|\.yml|\.toml|\.sh)
         args:
         - --license-filepath
-        - hack/config/licence.txt
+        - LICENSE
         # - --remove-header
 - repo: https://github.com/jumanjihouse/pre-commit-hooks
   rev: 3.0.0
