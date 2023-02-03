@@ -28,7 +28,7 @@ CROSSPLANE_NAMESPACE = crossplane-system
 ACK_SYSTEM_NAMESPACE = ack-system
 AWS_REGION = us-west-2
 # datasource=github-tags depName=aws-controllers-k8s/ec2-controller
-ACK_EC2_VERSION = v0.1.0
+ACK_EC2_VERSION = v0.1.1
 # datasource=github-tags depName=aws-controllers-k8s/ecr-controller
 ACK_ECR_VERSION = v0.1.8
 # datasource=github-tags depName=aws-controllers-k8s/eks-controller
