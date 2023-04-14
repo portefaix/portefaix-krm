@@ -40,7 +40,7 @@ ACK_S3_VERSION = v1.0.3
 
 ASO_SYSTEM_NAMESPACE = aso-system
 # datasource=github-tags depName=Azure/azure-service-operator
-ASO_VERSION = v2.0.0-beta.5
+ASO_VERSION = v2.0.0
 
 # ====================================
 # D E V E L O P M E N T
