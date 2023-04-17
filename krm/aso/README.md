@@ -20,6 +20,11 @@
 > make aso-azure-credentials
 ```
 
+* Check controllers:
+
+```shell
+```
+
 ## Clean
 
 ```shell

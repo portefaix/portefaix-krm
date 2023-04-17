@@ -178,7 +178,7 @@ ack-uninstall: ## Uninstall the ACK controllers
 ##@ ASO
 
 .PHONY: aso-azure-credentials
-aso-azure-credentials: guard-AZURE_TENANT_ID guard-AZURE_SUBSCRIPTION_ID ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
+aso-azure-credentials: guard-AZURE_TENANT_ID guard-AZURE_SUBSCRIPTION_ID ## Generate credentials for AWS (AZURE_TENANT_ID=xxx AZURE_SUBSCRIPTION_ID=xxx)
 	@./hack/scripts/aso.sh aso-controller-settings $(ASO_SYSTEM_NAMESPACE)
 
 .PHONY: aso-dependencies

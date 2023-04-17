@@ -41,6 +41,11 @@ az ad sp create-for-rbac -n azure-service-operator --role contributor \
 AZURE_CLIENT_ID=$(jq -r .appId < aso.json)
 AZURE_CLIENT_SECRET=$(jq -r .password < aso.json)
 
+if [[ -z "${AZURE_CLIENT_ID}" || -z "${AZURE_CLIENT_SECRET}" ]]; then
+  echo_fail "error reading Azure credentials"
+  exit 1
+fi
+
 echo_info "[Kubernetes] Azure: Create secret ${SECRET_NAME} into ${NAMESPACE}"
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
