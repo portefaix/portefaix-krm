@@ -42,6 +42,10 @@ ASO_SYSTEM_NAMESPACE = aso-system
 # datasource=github-tags depName=Azure/azure-service-operator
 ASO_VERSION = v2.0.0-beta.5
 
+KCC_SYSTEM_NAMESPACE = cnrm-system
+# datasource=github-tags depName=GoogleCloudPlatform/k8s-config-connector
+ASO_VERSION = v1.101.0
+
 # ====================================
 # D E V E L O P M E N T
 # ====================================
@@ -166,6 +170,13 @@ ack-uninstall: ## Uninstall the ACK controllers
 	helm uninstall -n $(ACK_SYSTEM_NAMESPACE) ack-s3-controller
 	kubectl delete namespace $(ACK_SYSTEM_NAMESPACE)
 
+
+# ====================================
+# ASO
+# ====================================
+
+##@ ASO
+
 .PHONY: aso-azure-credentials
 aso-azure-credentials: guard-AZURE_TENANT_ID guard-AZURE_SUBSCRIPTION_ID ## Generate credentials for AWS (AWS_ACCESS_KEY=xxx AWS_SECRET_ACCESS_KEY=xxx)
 	@./hack/scripts/aso.sh aso-controller-settings $(ASO_SYSTEM_NAMESPACE)
@@ -180,7 +191,7 @@ aso-dependencies: ## Install dependencies
 		cert-manager cert-manager/cert-manager --version 1.9.1
 
 .PHONY: aso-install
-aso-install:## Install the ASO controlplane
+aso-install: ## Install the ASO controlplane
 	@helm repo add aso2 https://raw.githubusercontent.com/Azure/azure-service-operator/main/v2/charts
 	@helm repo update
 	@helm upgrade --install --devel --create-namespace --namespace=$(ASO_SYSTEM_NAMESPACE) azure-service-operator \
@@ -198,3 +209,25 @@ aso-uninstall: ## Uninstall the ACK controllers
 	@kubectl delete namespace $(ASO_SYSTEM_NAMESPACE)
 	@helm uninstall -n cert-manager cert-manager
 	@kubectl delete namespace cert-manager
+
+
+# ====================================
+# KCC
+# ====================================
+
+##@ KCC
+
+kcc-install: # Install the KCC controlplane
+	helm upgrade --install --devel --create-namespace --namespace=$(KCC_SYSTEM_NAMESPACE) kubernetes-config-connector \
+		aso2/azure-service-operator \
+		--version=v$(KCC_VERSION) \
+		-f krm/kcc/values.yaml
+
+.PHONY: kcc-infra
+kcc-infra: guard-ACTION ## Manage the components (ACTION=xxx, apply or delete)
+	@kustomize build krm/kcc/infra | kubectl $(ACTION) -f -
+
+.PHONY: kcc-uninstall
+kcc-uninstall: ## Uninstall KCC controlplane
+	@helm uninstall -n $(KCC_SYSTEM_NAMESPACE) kubernetes-config-connector
+	@kubectl delete namespace $(KCC_SYSTEM_NAMESPACE)

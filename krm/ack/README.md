@@ -6,12 +6,6 @@
 > make kind-create ENV=aws
 ```
 
-* Install ACK:
-
-```shell
-> make ack-controlplane ENV=aws
-```
-
 ## Cloud provider credentials
 
 ```shell
@@ -23,10 +17,10 @@
 * Install ACK controllers:
 
 ```shell
-> make ack-install
+> make kcc-install
 ```
 
-* Check controllers:
+* Check controller:
 
 ```shell
 > kubectl -n ack-system get pods -l "app.kubernetes.io/instance=ack-ec2-controller"
@@ -39,5 +33,5 @@
 * Clean cluster:
 
 ```shell
-> make ack-uninstall
+> make kcc-uninstall
 ```

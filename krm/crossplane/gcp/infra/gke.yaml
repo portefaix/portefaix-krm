@@ -75,8 +75,8 @@ spec:
     #   service: kubernetes
     #   role: cluster
     #   made-by: crossplane
-    # workloadIdentityConfig:
-    #   workloadPool: portefaix-krm #.svc.id.goog
+    workloadIdentityConfig:
+      workloadPool: portefaix-krm-crossplane.svc.id.goog
   writeConnectionSecretToRef:
     name: portefaix-krm-gke
     namespace: crossplane-system
