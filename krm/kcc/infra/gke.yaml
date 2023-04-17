@@ -1,0 +1,216 @@
+# Copyright (C) Nicolas Lamirault <nicolas.lamirault@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+---
+apiVersion: container.cnrm.cloud.google.com/v1beta1
+kind: ContainerCluster
+metadata:
+  name: portefaix-krm-kcc
+spec:
+  description: portefaix-krm-kcc
+  location: eu-west1
+  releaseChannel:
+    channel: REGULAR
+  networkRef:
+    name: portefaix-krm-kcc
+  subnetworkRef:
+    name: portefaix-krm-kcc
+
+  workloadIdentityConfig:
+    workloadPool: portefaix-krm-kcc.svc.id.goog
+
+  # Automation
+
+  clusterAutoscaling:
+    enabled: true
+    autoscalingProfile: BALANCED
+    resourceLimits:
+    - resourceType: cpu
+      maximum: 100
+      minimum: 10
+    - resourceType: memory
+      maximum: 1000
+      minimum: 100
+  verticalPodAutoscaling:
+    enabled: false
+  maintenancePolicy:
+    dailyMaintenanceWindow:
+      startTime: 03:00
+  notificationConfig:
+    pubsub:
+      enabled: true
+      topicRef:
+        name: portefaix-krm-kcc
+
+  # Node Pools
+
+  initialNodeCount: 1
+  defaultMaxPodsPerNode: 16
+  nodeLocations:
+    - eu-west1-a
+    - eu-west1-b
+    - eu-west1-c
+
+  # Networking
+
+  networkingMode: VPC_NATIVE
+  # Enable dataplane V2
+  # https://cloud.google.com/kubernetes-engine/docs/concepts/dataplane-v2
+  datapathProvider: ADVANCED_DATAPATH
+  masterAuthorizedNetworksConfig:
+    cidrBlocks:
+      - cidrBlock: 0.0.0.0/0
+        displayName: The Internet
+  ipAllocationPolicy:
+    servicesSecondaryRangeName: services
+    clusterSecondaryRangeName: pods
+  enableIntranodeVisibility: true
+  networkPolicy:
+    enabled: true
+  dnsConfig:
+    clusterDns: CLOUD_DNS
+    clusterDnsScope: CLUSTER_SCOPE
+
+  # Security
+
+  enableBinaryAuthorization: true
+  enableShieldedNodes: true
+  confidentialNodes:
+    enabled: true
+  privateClusterConfig:
+    # Allow public access to the GKE control plane by default.
+    # This default is a deliberate compromise for ease of use over security.
+    # For increased security, set to true to disable public IP access.
+    enablePrivateEndpoint: false
+    enablePrivateNodes: true
+    # Enable global access to the GKE control plane's internal loab balancer.
+    # https://cloud.google.com/load-balancing/docs/internal/setting-up-internal#ilb-global-access
+    masterGlobalAccessConfig:
+      enabled: true
+    masterIpv4CidrBlock: 172.16.0.0/28
+  podSecurityPolicyConfig:
+    enabled: false
+
+  # Features
+
+  loggingConfig:
+    enableComponents:
+      - "SYSTEM_COMPONENTS"
+      - "WORKLOADS"
+  monitoringConfig:
+    enableComponents:
+      - "SYSTEM_COMPONENTS"
+  enableAutopilot: false
+  costManagementConfig:
+    enabled: true
+  addonsConfig:
+    cloudrunConfig:
+      disabled: true
+    configConnectorConfig:
+      enabled: false
+    dnsCacheConfig:
+      enabled: true
+    gcePersistentDiskCsiDriverConfig:
+      enabled: true
+    gcpFilestoreCsiDriverConfig:
+      enabled: true
+    gkeBackupAgentConfig:
+      enabled: true
+    horizontalPodAutoscaling:
+      disabled: true
+    httpLoadBalancing:
+      disabled: true
+    istioConfig:
+      disabled: true
+    kalmConfig:
+      enabled: false
+    networkPolicyConfig:
+      disabled: false
+---
+apiVersion: container.cnrm.cloud.google.com/v1beta1
+kind: ContainerNodePool
+metadata:
+  name: portefaix-krm-kcc-core
+spec:
+  location: eu-west1
+  autoscaling:
+    minNodeCount: 1
+    maxNodeCount: 3
+  nodeConfig:
+    imageType: COS_CONTAINERD
+    machineType: e2-standard-16
+    diskSizeGb: 100
+    diskType: pd-ssd
+    labels:
+      gke.io/nodepool: core
+    tags:
+      - kubernetes
+      - nodes
+    preemptible: false
+    minCpuPlatform: "Intel Haswell"
+    oauthScopes:
+      - https://www.googleapis.com/auth/cloud-platform
+      # - https://www.googleapis.com/auth/logging.write
+      # - https://www.googleapis.com/auth/monitoring
+    metadata:
+      disable-legacy-endpoints: "true"
+    shieldedInstanceConfig:
+      enableIntegrityMonitoring: true
+      enableSecureBoot: true
+    serviceAccountRef:
+      name: portefaix-krm-kcc-gke
+  management:
+    autoRepair: true
+    autoUpgrade: true
+  clusterRef:
+    name: portefaix-krm-kcc
+---
+apiVersion: container.cnrm.cloud.google.com/v1beta1
+kind: ContainerNodePool
+metadata:
+  name: portefaix-krm-kcc-ops
+spec:
+  location: eu-west1
+  autoscaling:
+    minNodeCount: 1
+    maxNodeCount: 3
+  nodeConfig:
+    machineType: e2-standard-16
+    diskSizeGb: 100
+    diskType: pd-ssd
+    labels:
+      gke.io/nodepool: ops
+    tags:
+      - kubernetes
+      - nodes
+    preemptible: false
+    minCpuPlatform: "Intel Haswell"
+    oauthScopes:
+      - https://www.googleapis.com/auth/cloud-platform
+      # - https://www.googleapis.com/auth/logging.write
+      # - https://www.googleapis.com/auth/monitoring
+    metadata:
+      disable-legacy-endpoints: "true"
+    shieldedInstanceConfig:
+      enableIntegrityMonitoring: true
+      enableSecureBoot: true
+    serviceAccountRef:
+      name: portefaix-krm-kcc-gke
+  management:
+    autoRepair: true
+    autoUpgrade: true
+  clusterRef:
+    name: portefaix-krm-kcc

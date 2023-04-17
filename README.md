@@ -11,13 +11,14 @@ Tools:
 * [Crossplane](https://crossplane.io)
 * [AWS Controllers for Kubernetes](https://aws-controllers-k8s.github.io/community/)
 * [Azure Service Operator](https://github.com/Azure/azure-service-operator)
-* [Config Connector](https://cloud.google.com/config-connector/docs/overview)
+* [Kubernetes Config Connector](https://cloud.google.com/config-connector/docs/overview)
 
 ## Documentation
 
 * [Crossplane](./krm/crossplane)
 * [AWS Controllers for Kubernetes](./krm/ack/)
 * [Azure Service Operator](./krm/aso/)
+* [Kubernetes Config Connector](./krm/kcc)
 
 ## Contributing
 
