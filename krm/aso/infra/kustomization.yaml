@@ -26,3 +26,7 @@ resources:
 - ./subnets.yaml
 - ./sg.yaml
 - ./ip_address.yaml
+- ./containerregistry.yaml
+- ./containerservice.yaml
+- ./eventhub.yaml
+- ./servicebus.yaml

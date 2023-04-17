@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-apiVersion: network.azure.com/v1beta20201101
+apiVersion: network.azure.com/v1api20201101
 kind: NetworkSecurityGroup
 metadata:
   name: portefaix-krm-aso
@@ -24,7 +24,7 @@ spec:
   owner:
     name: portefaix-krm-aso
 ---
-apiVersion: network.azure.com/v1beta20201101
+apiVersion: network.azure.com/v1api20201101
 kind: NetworkSecurityGroupsSecurityRule
 metadata:
   name: portefaix-krm-aso-ssh

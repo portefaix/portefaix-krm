@@ -15,14 +15,25 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-apiVersion: network.azure.com/v1api20201101
-kind: VirtualNetwork
+apiVersion: containerservice.azure.com/v1api20230201
+kind: ManagedCluster
 metadata:
   name: portefaix-krm-aso
 spec:
-  location: westcentralus
+  location: westus3
   owner:
     name: portefaix-krm-aso
-  addressSpace:
-    addressPrefixes:
-      - 10.20.0.0/16
+  dnsPrefix: aso
+  agentPoolProfiles:
+    - name: core
+      count: 3
+      vmSize: Standard_DS2_v2
+      osType: Linux
+      mode: System
+    - name: ops
+      count: 2
+      vmSize: Standard_DS2_v2
+      osType: Linux
+      mode: System
+  identity:
+    type: SystemAssigned

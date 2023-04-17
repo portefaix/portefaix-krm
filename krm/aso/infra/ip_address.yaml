@@ -15,7 +15,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-apiVersion: network.azure.com/v1beta20201101
+apiVersion: network.azure.com/v1api20201101
 kind: PublicIPAddress
 metadata:
   name: portefaix-krm-aso-gw

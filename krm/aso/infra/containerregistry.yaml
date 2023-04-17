@@ -15,14 +15,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-apiVersion: network.azure.com/v1api20201101
-kind: VirtualNetwork
+apiVersion: containerregistry.azure.com/v1api20210901
+kind: Registry
 metadata:
-  name: portefaix-krm-aso
+  name: portefaix-krm-charts
 spec:
   location: westcentralus
   owner:
     name: portefaix-krm-aso
-  addressSpace:
-    addressPrefixes:
-      - 10.20.0.0/16
+  publicNetworkAccess: Enabled
+  sku:
+    name: Basic
+  zoneRedundancy: Disabled
