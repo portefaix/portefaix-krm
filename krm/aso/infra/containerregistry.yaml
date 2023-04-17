@@ -15,16 +15,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: azureserviceoperator-system
-transformers:
-- labels.yaml
-resources:
-- ./rg.yaml
-- ./vpc.yaml
-- ./subnets.yaml
-- ./sg.yaml
-- ./ip_address.yaml
-- ./containerregistry.yaml
-- ./containerservice.yaml
+apiVersion: containerregistry.azure.com/v1api20210901
+kind: Registry
+metadata:
+  name: portefaix-krm-charts
+spec:
+  location: westcentralus
+  owner:
+    name: portefaix-krm-aso
+  publicNetworkAccess: Enabled
+  sku:
+    name: Basic
+  zoneRedundancy: Disabled
