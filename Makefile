@@ -44,7 +44,7 @@ ASO_VERSION = v2.2.0
 
 KCC_SYSTEM_NAMESPACE = cnrm-system
 # datasource=github-tags depName=GoogleCloudPlatform/k8s-config-connector
-ASO_VERSION = v1.107.0
+ASO_VERSION = v1.108.0
 
 # ====================================
 # D E V E L O P M E N T
