@@ -22,7 +22,7 @@ KUBE_CURRENT_CONTEXT = $(shell kubectl config current-context)
 CLUSTER = $(CLUSTER_$(ENV))
 
 # datasource=github-tags depName=crossplane/crossplane
-CROSSPLANE_VERSION = v1.14.1
+CROSSPLANE_VERSION = v1.14.2
 CROSSPLANE_NAMESPACE = crossplane-system
 
 ACK_SYSTEM_NAMESPACE = ack-system
