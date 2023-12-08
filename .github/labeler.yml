@@ -16,49 +16,32 @@
 
 # Labels for action/labeler
 
-area/kubernetes:
-  - kubernetes/*
-  - kubernetes/**/*
+######################################
+# Label area/xxx
 
-cloud/gcp:
-  - iac/gcp/*
-  - iac/gcp/**/*
-  - kubernetes/overlays/gcp/**/*
+area/krm:
+- changed-files:
+  - any-glob-to-any-file: krm/**
 
-cloud/aws:
-  - iac/aws/*
-  - iac/aws/**/*
+area/github:
+- changed-files:
+  - any-glob-to-any-file: .github/**
 
-cloud/azure:
-  - iac/azure/*
-  - iac/azure/**/*
+######################################
+# Label krm/xxx
 
-cloud/alicloud:
-  - iac/alicloud/*
-  - iac/alicloud/**/*
+krm/gcp-config-connector:
+- changed-files:
+  - any-glob-to-any-file: krm/kcc/**
 
-cloud/digitalocean:
-  - iac/digitalocean/*
-  - iac/digitalocean/**/*
+krm/aws-controllers-k8s:
+- changed-files:
+  - any-glob-to-any-file: krm/ack/**
 
-cloud/exoscale:
-  - iac/exoscale/*
-  - iac/exoscale/**/*
+krm/azure-service-operator:
+- changed-files:
+  - any-glob-to-any-file: krm/aso/**
 
-cloud/scaleway:
-  - iac/scaleway/*
-  - iac/scaleway/**/*
-
-cloud/homelab:
-  - iac/homelab/*
-  - iac/homelab/**/*
-  - kubernetes/overlays/k3s/homelab
-
-cloud/cicd:
-  - iac/cicd/*
-  - iac/cicd/**/*
-  - kubernetes/overlays/k3s/cicd/*
-
-kind/documentation:
-  - docs/*
-  - docs/**/*
+krm/crossplane:
+- changed-files:
+  - any-glob-to-any-file: krm/crossplane/**
