@@ -28,7 +28,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM alpine:3.18@sha256:3ddf7bf1d408188f9849efbf4f902720ae08f5131bb39013518b918aa056d0de
+FROM alpine:3.18@sha256:1de40638fad426a70673d0fc01325b6a02c1924c7122dc07f78a94535f20840e
 
 LABEL maintainer="Nicolas Lamirault <nicolas.lamirault@gmail.com>" \
     org.opencontainers.image.title="Tools for Portefaix project" \
