@@ -30,7 +30,7 @@ AWS_REGION = us-west-2
 # datasource=github-tags depName=aws-controllers-k8s/ec2-controller
 ACK_EC2_VERSION = v1.3.0
 # datasource=github-tags depName=aws-controllers-k8s/ecr-controller
-ACK_ECR_VERSION = v1.0.19
+ACK_ECR_VERSION = v1.0.20
 # datasource=github-tags depName=aws-controllers-k8s/eks-controller
 ACK_EKS_VERSION = v1.5.2
 # datasource=github-tags depName=aws-controllers-k8s/iam-controller
