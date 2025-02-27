@@ -32,7 +32,7 @@ ACK_EC2_VERSION = v1.3.2
 # datasource=github-tags depName=aws-controllers-k8s/ecr-controller
 ACK_ECR_VERSION = v1.0.21
 # datasource=github-tags depName=aws-controllers-k8s/eks-controller
-ACK_EKS_VERSION = v1.5.4
+ACK_EKS_VERSION = v1.6.3
 # datasource=github-tags depName=aws-controllers-k8s/iam-controller
 ACK_IAM_VERSION = v1.3.18
 # datasource=github-tags depName=aws-controllers-k8s/s3-controller
