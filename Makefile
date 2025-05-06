@@ -36,7 +36,7 @@ ACK_EKS_VERSION = v1.7.1
 # datasource=github-tags depName=aws-controllers-k8s/iam-controller
 ACK_IAM_VERSION = v1.3.18
 # datasource=github-tags depName=aws-controllers-k8s/s3-controller
-ACK_S3_VERSION = v1.0.27
+ACK_S3_VERSION = v1.0.29
 
 ASO_SYSTEM_NAMESPACE = aso-system
 # datasource=github-tags depName=Azure/azure-service-operator
