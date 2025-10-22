@@ -40,7 +40,7 @@ ACK_S3_VERSION = v1.1.0
 
 ASO_SYSTEM_NAMESPACE = aso-system
 # datasource=github-tags depName=Azure/azure-service-operator
-ASO_VERSION = v2.15.0
+ASO_VERSION = v2.16.0
 
 KCC_SYSTEM_NAMESPACE = cnrm-system
 # datasource=github-tags depName=GoogleCloudPlatform/k8s-config-connector
